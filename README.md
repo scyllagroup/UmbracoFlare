@@ -44,4 +44,4 @@ user has permission to see it. To do this, go to the Users section, select your 
 The credentials to hookup to CloudFlare can either be changed in the /config/cloudflare.config or through the backoffice under the UmbracoFlare section.
 
 ###Cloudflare rules
-If you find that cloudflare caching is not working with your site. Use redbot.org to determine if your server is sending your cache control header as "private". If so, you will want to update your page rules in the Cloudflare dashboard (not UmbracoFlare) to "purge everything" in the dropdown. 
+If you find that cloudflare caching is not working with your site. Use redbot.org (or a similar tool) to determine if your server is sending your cache control header as "private". If so, you will want to update your page rules in the Cloudflare dashboard (not UmbracoFlare) to "purge everything" in the dropdown. 
