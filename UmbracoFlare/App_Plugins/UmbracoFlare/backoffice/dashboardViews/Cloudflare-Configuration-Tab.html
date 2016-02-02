@@ -1,0 +1,24 @@
+﻿<!--Included in /config/Dashboard.config-->
+<div style="max-width: 1200px" ng-controller="Cloudflare.Configuration.Controller" class="umbracoflare umb-pane umb-scrollable">
+    <h2>Cloudflare Status</h2>
+    
+    <div class="cloudflare-config">
+        <h3>
+            Cloudflare Purging is <span ng-show="config.PurgeCacheOn">ON <i class="fa fa-toggle-on fa-lg active" ng-click="togglePurgeCacheOn()"></i></span><span ng-show="!config.PurgeCacheOn">OFF <i class="fa fa-toggle-on fa-rotate-180 fa-lg inactive" ng-click="togglePurgeCacheOn()"></i></span>
+        </h3>
+        <h3>
+            Cloudflare Credentials are <span ng-show="config.CredentialsAreValid">Valid <i class="fa fa-icon-remove-sign fa-lg active"></i></span><span ng-show="!config.CredentialsAreValid">Invalid <i class="fa fa-icon-ok-circle fa-lg inactive"></i></span>
+        </h3>
+        <p>This is the master control to turn off the cloudflare controls in Umbraco. This includes purgin on publish, from the context menu and from the dashboard.</p>
+        <div class="config-group">
+            <label>Api Key</label>
+            <input type="text" ng-model="uiConfig.ApiKey" />
+        </div>
+        <div class="config-group">
+            <label>Account Email</label>
+            <input type="text" ng-model="uiConfig.AccountEmail" />
+        </div>
+        <button ng-click="UpdateCredentials()">Update Credentials</button>
+    </div>
+    
+</div>

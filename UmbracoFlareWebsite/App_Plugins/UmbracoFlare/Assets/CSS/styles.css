@@ -1,0 +1,66 @@
+﻿.umbracoflare .umbracoflareContainer {
+	max-width: 840px;
+	margin: auto;
+	padding: 0 20px;
+}
+
+.umbracoflare .-color-red {
+	color: #e92051;
+}
+
+.umbracoflare a {
+	color: #e92051;
+}
+
+.umbracoflare .title h1 {
+}
+
+.umbracoflare .title h2 {
+}
+
+.umbracoflare .title a {
+}
+
+.umbracoflare .licenseContainer {
+	padding: 20px;
+	background-color: #efefef;
+	margin: 4rem 0 1rem 0;
+}
+
+.umbracoflare .license {
+	width: 100%;
+	overflow-y: scroll;
+	box-sizing: border-box;
+	height: 420px;
+}
+
+
+
+
+/*
+		Borrowed from Bootstrap
+	*/
+
+.umbracoflare .bs-callout {
+	padding: 20px;
+	margin: 20px 0;
+	border: 1px solid #eee;
+	border-left-width: 5px;
+	border-radius: 3px;
+}
+
+.umbracoflare .bs-callout-danger {
+	border-left-color: #ce4844;
+}
+
+	.umbracoflare .bs-callout-danger h4 {
+		color: #ce4844;
+	}
+
+.umbracoflare .bs-callout-success {
+	border-left-color: #5cb85c;
+}
+
+	.umbracoflare .bs-callout-success h4 {
+		color: #5cb85c;
+	}

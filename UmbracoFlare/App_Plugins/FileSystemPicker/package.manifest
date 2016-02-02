@@ -1,0 +1,53 @@
+{
+    propertyEditors: [
+        {
+            alias: "Umbraco.FileSystemPicker",
+            name: "File System Picker",
+            editor: {
+                view: "~/App_Plugins/FileSystemPicker/filesystem-picker.html"
+            },
+            prevalues: {
+                fields: [
+                    {
+                        label: "Folder",
+                        description: "Pick the start folder to select a file from",
+                        key: "folder",
+                        view: "~/App_Plugins/FileSystemPicker/foldersystem-picker.html",
+                        validation: [
+                            {
+                                type: "Required" 
+                            }
+                        ]
+                    },
+                    {
+                        label: "Filter",
+                        description: "Comma separated list of extensions to filter the files to select from (i.e. 'png, jpg'), no wildcard, no dot",
+                        key: "filter",
+                        view: "textstring"
+                    },
+					{
+                        label: "Image Thumbnail Size",
+                        description: "Enter the thumbnail size",
+                        key: "thumbnailSize",
+                        view: "textstring",
+                        validation: [
+                            {
+                                type: "Required" 
+                            }
+                        ]
+                    },
+					{
+                        label: "Coordinate Picker",
+                        description: "Use coordinate picker for image",
+                        key: "coordinatePicker",
+                        view: "boolean"
+                    }
+                ]
+            }
+        }
+    ],
+    javascript: [
+		'~/App_Plugins/FileSystemPicker/filesystem-picker.directives.js',
+		'~/App_Plugins/FileSystemPicker/filesystem-picker.controller.js'
+	]
+}

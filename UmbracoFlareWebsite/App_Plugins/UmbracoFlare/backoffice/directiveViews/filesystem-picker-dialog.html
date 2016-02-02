@@ -1,0 +1,29 @@
+<div class="umb-panel" ng-controller="Umbraco.FileSystemPickerDialogController">
+    <div class="umb-panel-footer">
+        <div>{{dialogData.folder}}</div>
+    </div>
+    <div class="umb-panel-body no-header with-footer umb-scrollable">
+        <fs-tree section="dummy"
+                  treealias="fileSystemTree"
+                  eventhandler="dialogEventHandler"
+                  hideoptions="false"
+                  hideheader="false"
+                  isdialog="true"
+                  customtreeparams="startfolder={{dialogData.folder}}&amp;filter={{dialogData.filter}}&amp;files=true"
+                  />
+    </div>
+    <div class="umb-panel-footer">
+        <div class="umb-el-wrap umb-panel-buttons">
+            <div class="btn-toolbar umb-btn-toolbar pull-right">
+                <a href ng-click="close()" class="btn btn-link">
+                    <localize key="general_cancel">Cancel</localize>
+                </a>
+            </div>
+            <div class="btn-toolbar umb-btn-toolbar">
+                <a href ng-click="selectFiles()" class="btn btn-success btn-link">
+                    <localize key="general_add">Add</localize>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

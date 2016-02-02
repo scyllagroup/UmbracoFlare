@@ -1,0 +1,25 @@
+﻿<div>
+    
+    <div>
+        <input type="text" ng-model="activeInput" /><button class="btn btn-small" ng-click="add(activeInput)">Add</button>
+    </div>
+    <div ng-repeat="item in collection">
+        <input type="text" disabled value="{{item}}" /><button class=" btn btn-small btn-danger" ng-click="remove(item)">Remove</button>
+    </div>
+    <button class="btn btn-success" ng-disabled="collection == null || collection.length == 0" ng-click="submit({collection:collection})">{{submitText}}</button>
+</div>
+
+
+<style type="text/css">
+    .input-adder div {
+        margin: 10px 0;
+    }
+
+    .input-adder button {
+        margin-left: 10px;
+    }
+
+    input{
+        width:300px;
+    }
+</style>
