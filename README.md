@@ -2,12 +2,12 @@
 This project aims to provide a basic level of service integration between Cloudflare and the open-source ASP.NET CMS Umbraco.
 
 #What does it do? 
-##Umbraco Save and Publish Events
-UmbracoFlare hooks into the Content Published, & Media Saved events. 
+  ##Umbraco Save and Publish Events
+  UmbracoFlare hooks into the Content Published, & Media Saved events. 
 
-###Content Published Event
-Everytime you publish a piece of content, UmbracoFlare will check to see if UmbracoFlare is switched to on (in the config section). 
-If UmbracoFlare is on,
+    ###Content Published Event
+    Everytime you publish a piece of content, UmbracoFlare will check to see if UmbracoFlare is switched to on (in the config section). 
+    If UmbracoFlare is on,
 
 
 ##Setup
