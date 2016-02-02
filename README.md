@@ -5,13 +5,23 @@ This project aims to provide a basic level of service integration between Cloudf
 
 #What does it do? 
 
+##Quick Overview of Abilities of UmbracoFlare
+  - Purge cloudflare on content published event.
+  - Purge cloudflare on media saved event.
+  - Purge cloudflare from content context menu.
+  - Purge everything on cloudflare.
+  - Purge certain urls on cloudflare.
+  - Purge static files on cloudflare.
+
 ###Content Published Event
 Everytime content is published, UmbracoFlare will check to see if UmbracoFlare is on (in the config section). 
 If UmbracoFlare is on, we will check for the property with the alias of "cloudflareDisabledOnPublish", if this property does NOT exist, it will be treated as if the checkbox is not checked, and the cache will be purged. If this property exists, and is checked, we will ignore this piece of content and will NOT purge cloudflare for this piece of content. The scheme used to generate the url for the piece of content is `umbraco.lobrary.NiceUrlWithDomain(content.ID))`. [The relevant code to the Content Published event can be found here.](../blob/master/LICENSE]
 
 ###Media Saved
 Everytime media is saved, UmbracoFlare will check to see if UmbracoFlare is on (in the config section). 
-If UmbracoFlare is on, we will check for the property with the alias of "cloudflareDisabledOnPublish", if this property does NOT exist, it will be treated as if the checkbox is not checked, and the cache will be purged. If this property exists, and is checked, we will ignore this piece of content and will NOT purge cloudflare for this media item. It is important to note that UmbracoFlare will get every crop (if you use Image Cropper) and purge the media url for each of those crops. The scheme used to generate the url for the piece of content is `(IPublishedContent)publishedMedia.Url` as well as the crop urls described in the previous sentence. [The relevant code to the Media Saved event can be found here.](../blob/master/LICENSE]
+If UmbracoFlare is on, we will check for the property with the alias of "cloudflareDisabledOnPublish", if this property does NOT exist, it will be treated as if the checkbox is not checked, and the cache will be purged. If this property exists, and is checked, we will ignore this media and will NOT purge cloudflare for it. It is important to note that UmbracoFlare will get every crop (if you use Image Cropper) and purge the media url for each of those crops (using `(IPublishedContent)publishedMedia.GetCropUrl(crop.alias)`). The scheme used to generate the url for the piece of content is `(IPublishedContent)publishedMedia.Url` as well as the crop urls described in the previous sentence. [The relevant code to the Media Saved event can be found here.](../blob/master/LICENSE]
+
+
 
 ##Setup
 
