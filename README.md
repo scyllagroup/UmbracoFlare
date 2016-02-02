@@ -6,12 +6,12 @@ This project aims to provide a basic level of service integration between Cloudf
 #What does it do? 
 
 ##Abilities of UmbracoFlare
-  - Purge cloudflare on content published event.
-  - Purge cloudflare on media saved event.
-  - Purge cloudflare from content context menu.
-  - Purge everything on cloudflare.
-  - Purge certain urls on cloudflare.
-  - Purge static files on cloudflare.
+  - Purge Cloudflare on content published event.
+  - Purge Cloudflare on media saved event.
+  - Purge Cloudflare from content context menu.
+  - Purge everything on Cloudflare.
+  - Purge certain urls on Cloudflare.
+  - Purge static files on Cloudflare.
 
 ###Content Published Event
 Everytime content is published, UmbracoFlare will check to see if UmbracoFlare is on (in the config section). 
