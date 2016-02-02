@@ -5,7 +5,7 @@ This project aims to provide a basic level of service integration between Cloudf
 
 #What does it do? 
 
-##Quick Overview of Abilities of UmbracoFlare
+##Abilities of UmbracoFlare
   - Purge cloudflare on content published event.
   - Purge cloudflare on media saved event.
   - Purge cloudflare from content context menu.
