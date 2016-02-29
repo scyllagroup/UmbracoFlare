@@ -1,6 +1,8 @@
 # UmbracoFlare
 This project aims to provide a basic level of service integration between Cloudflare and the open-source ASP.NET CMS Umbraco.
 
+Here is the package on our umbraco. https://our.umbraco.org/projects/backoffice-extensions/umbracoflare/
+
 ###Please note: This is still in Beta so use at your own risk on production/live sites! 
 
 #What does it do? 
