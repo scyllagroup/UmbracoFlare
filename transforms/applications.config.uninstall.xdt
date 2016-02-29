@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<applications xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-  <add alias="UmbracoFlare" name="UmbracoFlare" icon="icon-umb-contour" sortOrder="15"  xdt:Locator="Match(alias)" xdt:Transform="Remove"/>
-</applications>
