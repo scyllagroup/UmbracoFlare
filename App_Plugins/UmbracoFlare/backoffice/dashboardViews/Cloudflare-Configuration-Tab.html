@@ -1,0 +1,152 @@
+﻿<!--Included in /config/Dashboard.config-->
+<div style="max-width: 1200px" ng-controller="Cloudflare.Configuration.Controller" class="umbracoflare config-tab umb-scrollable">
+
+    <div class="cloudflare-config" view-more click-element-id="viewMoreClicker" below-the-fold-element-id="below-the-fold">
+        <div class="header-container">
+            <h2>1) CloudFlare&reg; Account</h2>
+            <span>
+                <a class="-black" id="viewMoreClicker" href="">
+                    <span class="collapse-show" ng-hide="contentHidden"><span class="collapse-show-text">Collapse</span><i class="fa fa-chevron-up"></i></span>
+                    <span class="collapse-show" ng-show="contentHidden"><span class="collapse-show-text">Show</span><i class="fa fa-chevron-down"></i></span>
+                </a>
+            </span>
+        </div>
+
+        <hr />
+        <div id="below-the-fold">
+            
+            <p>This is the master control to turn off the cloudflare controls in Umbraco. This includes purgin on publish, from the context menu and from the dashboard.</p>
+            <div class="config-group">
+                <label>Api Key <a class="umbraco-help" ng-click="openModal('apiKey')"><i class=" -black fa fa-question-circle fa-lg"></i></a></label>
+                <input type="text" ng-model="uiConfig.ApiKey" />
+            </div>
+            <div class="config-group">
+                <label>Account Email <a class="umbraco-help" ng-click="openModal('accountEmail')"><i class=" -black fa fa-question-circle fa-lg"></i></a></label>
+                <input type="text" ng-model="uiConfig.AccountEmail" />
+            </div>
+            <button class="btn btn-success" ng-click="UpdateCredentials()">Update Credentials</button>
+            <h3>
+                Cloudflare Account: <span class="-green" ng-show="config.CredentialsAreValid ">Associated </span><span class="-red" ng-show="!config.CredentialsAreValid">Not Associated</span>
+            </h3>
+        </div>
+    </div>
+    <div class="cloudflare-config" view-more click-element-id="viewMoreClicker2" below-the-fold-element-id="below-the-fold2">
+        <div class="header-container">
+            <h2>2) UmbracoFlare&trade; Auto-Purge</h2>
+            <span>
+                <a class="-black" id="viewMoreClicker2" href="">
+                    <span class="collapse-show"  ng-hide="contentHidden"><span class="collapse-show-text">Collapse</span><i class="fa fa-chevron-up"></i></span>
+                    <span class="collapse-show" ng-show="contentHidden"><span class="collapse-show-text">Show</span><i class="fa fa-chevron-down"></i></span>
+                </a>
+            </span>
+        </div>
+
+        <hr />
+        <!--<h3>
+            Cloudflare Purging is <span ng-show="config.PurgeCacheOn">ON <i class="fa fa-toggle-on fa-lg active" ng-click="togglePurgeCacheOn()"></i></span><span ng-show="!config.PurgeCacheOn">OFF <i class="fa fa-toggle-on fa-rotate-180 fa-lg inactive" ng-click="togglePurgeCacheOn()"></i></span>
+        </h3>-->
+        <div id="below-the-fold2">
+            
+            <p>By turning Auto-Purge ON, CloudFlare will automatically purge the servers’ cache everytime you save/publish a page or media type.</p>
+            <div class="toggle-container" >
+                <span>CloudFlare Auto-Purge</span>
+                <div class="toggle-switch">
+                    <div ng-click="togglePurgeCacheOn()" ng-class="{'-background-bright-green' : config.PurgeCacheOn}" class="-float-left toggle-button"><div class="toggle-label">ON</div></div>
+                    <div ng-click="togglePurgeCacheOn()" ng-class="{'-background-red' : !config.PurgeCacheOn}" class="-float-right toggle-button" ><div class="toggle-label">OFF</div></div>
+                </div>
+            </div>
+            <p>
+                Notes: <br/>
+                -You can still manually choose NOT to purge cache upon Save/Publish at the page content level. <a class="umbraco-help" ng-click="openModal('choosingNotToPurge')"><i class=" -black fa fa-question-circle fa-lg"></i></a> <br/>
+                -You can also manually purge pages through the UmbracoFlare dashboard or by right clicking a node and choosing option from the menu. <a class="umbraco-help" ng-click="openModal('manualPurgingANode')"><i class=" -black fa fa-question-circle fa-lg"></i></a> 
+            </p>
+        </div>
+    </div>
+
+</div>
+<div
+        bn-modals
+        ng-show="subview"
+        class="m-modals umbracoflare"
+        ng-switch="subview">
+
+        <!-- BEGIN: API KEY Modal. -->
+        <div
+            ng-switch-when="apiKey"
+            ng-controller="InfoModalController"
+            class="umbracoflare-modal">
+
+            <span class="close" ng-click="close()"><i class="fa fa-times fa-lg"></i></span>
+            <h2>Finding Your Account API</h2>
+
+            <span>1) Make sure you are logged into your <a href="http://www.cloudflare.com/">CloudFlare</a> account.</span> <br/>
+            <span>2) Locate and select the "My Settings" option under your account email in the upper right corner of the website.</span>
+            <br />
+            <img alt="How to login to cloudflare" src="/App_Plugins/UmbracoFlare/Assets/Media/login.jpg"/>
+            <!-- This is to demonstrate that we can jump from one modal to another. -->
+            <br />
+            <br />
+            <span>3)Scroll down the Settings page to the API row.</span><br/>
+            <span>4)Click the "View API Key" to display.</span> <br />
+            <br />
+            <img alt="How to get your API key." src="/App_Plugins/UmbracoFlare/Assets/Media/API.jpg"/>
+
+        </div>
+        <!-- END: API Key Modal. -->
+
+    <!-- BEGIN: ACCOUNT EMAIL Modal. -->
+        <div
+            ng-switch-when="accountEmail"
+            ng-controller="InfoModalController"
+            class="umbracoflare-modal">
+
+            <span class="close" ng-click="close()"><i class="fa fa-times fa-lg"></i></span>
+            <h2>Account Email</h2>
+
+            <span>This is the email you used to create your CloudFlare Account.</span> <br/>
+        </div>
+        <!-- END: ACCOUNT EMAIL Modal. -->
+
+        <!-- BEGIN: CHOOSING NOT TO PURGE Modal. -->
+        <div
+            ng-switch-when="choosingNotToPurge"
+            ng-controller="InfoModalController"
+            class="umbracoflare-modal">
+
+            <span class="close" ng-click="close()"><i class="fa fa-times fa-lg"></i></span>
+            <h2>Choosing NOT to purge</h2>
+
+            <span>Click this button at the bottom of the page to disable purging the cache when saving/publishing</span> <br/>
+
+            <br />
+            <img alt="How to disable on publish." src="/App_Plugins/UmbracoFlare/Assets/Media/Disable-purge.jpg"/>
+            <br />
+            <br />
+            <span>Please refer to the <a href="https://github.com/scyllagroup/UmbracoFlare" target="_blank" title="GitHub repo">GitHub readme</a> for documentation on how to disable the cache when saving/publishing.</span>
+        </div>
+        <!-- END: CHOOSING NOT TO PURGE Modal. -->
+    <!-- BEGIN: MANUAL PURGING Modal. -->
+        <div
+            ng-switch-when="manualPurgingANode"
+            ng-controller="InfoModalController"
+            class="umbracoflare-modal">
+
+            <span class="close" ng-click="close()"><i class="fa fa-times fa-lg"></i></span>
+            <h2>Manual Purging A Node</h2>
+
+            <span>1) Right-click the folder or node you wish to purge the cache for.</span> <br/>
+            <span>2) Choose "Purge CloudFlare Cache".</span>
+            <br />
+            <img alt="Purge context menu" src="/App_Plugins/UmbracoFlare/Assets/Media/manual-purge-1.jpg"/>
+            <!-- This is to demonstrate that we can jump from one modal to another. -->
+            <br />
+            <br />
+            <span>3)Confirm that "Purge Children" option is selected to purge all child pages associated with folder/page.</span><br/>
+            <span>4)Press "Purge Cache".</span> <br />
+            <br />
+            <img alt="Purge cache button." src="/App_Plugins/UmbracoFlare/Assets/Media/manual-purge-2.jpg"/>
+
+        </div>
+        <!-- END: MANUAL PURGING Modal. -->
+    </div>
+    <!-- END: Modals Layout. -->
