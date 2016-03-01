@@ -1,12 +1,13 @@
 ﻿<div>
     
     <div>
-        <input type="text" ng-model="activeInput" /><button class="btn btn-small" ng-click="add(activeInput)">Add</button>
+        <input type="text" ng-model="activeInput" class="input-adder-input" /><button class="btn btn-success" ng-click="add(activeInput)">Add</button>
     </div>
     <div ng-repeat="item in collection">
-        <input type="text" disabled value="{{item}}" /><button class=" btn btn-small btn-danger" ng-click="remove(item)">Remove</button>
+        <input type="text" disabled value="{{item}}" /><button class="btn btn-danger" ng-click="remove(item)">Remove</button>
     </div>
-    <button class="btn btn-success" ng-disabled="collection == null || collection.length == 0" ng-click="submit({collection:collection})">{{submitText}}</button>
+    <br/>
+    <button class="btn btn-success -float-right" ng-disabled="collection == null || collection.length == 0" ng-click="submit({collection:collection})">{{submitText}}</button>
 </div>
 
 

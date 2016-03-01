@@ -27,13 +27,15 @@ namespace UmbracoFlare.ApiControllers
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         [HttpPost]
-        public StatusWithMessage PurgeCacheForUrls([FromBody]string[] urls)
+        public StatusWithMessage PurgeCacheForUrls([FromBody]IEnumerable<string> urls)
         {
             if (urls == null || !urls.Any()) 
             { 
                 return new StatusWithMessage( false, "You must provide urls to clear the cache for.") ;
             }
-            
+
+            urls = AccountForWildCards(urls);
+
             List<StatusWithMessage> results = CloudflareManager.Instance.PurgePages(urls);
 
             if(results.Any(x => !x.Success))
@@ -42,7 +44,7 @@ namespace UmbracoFlare.ApiControllers
             }
             else
             {
-                return new StatusWithMessage(true, "Urls purged successfully.");
+                return new StatusWithMessage(true, String.Format("{0} urls purged successfully.", urls.Count()));
             }
         }
 
@@ -199,36 +201,38 @@ namespace UmbracoFlare.ApiControllers
 
 
         [HttpPost]
-        public StatusWithMessage PurgeCacheForContentNode([FromBody] int nodeId)
+        public StatusWithMessage PurgeCacheForContentNode([FromBody] PurgeCacheForIdParams args)
         {
-            if (nodeId <= 0) { return new StatusWithMessage(false, "You must provide a node id."); }
+            if (args.nodeId <= 0) { return new StatusWithMessage(false, "You must provide a node id."); }
 
             if (!CloudflareConfiguration.Instance.PurgeCacheOn) { return new StatusWithMessage(false, CloudflareMessages.CLOULDFLARE_DISABLED); }
 
-            IPublishedContent content = Umbraco.TypedContent(nodeId);
+            List<StatusWithMessage> statuses = new List<StatusWithMessage>();
 
-            if (content.GetPropertyValue<bool>("cloudflareDisabledOnPublish")) { return new StatusWithMessage(false, "You have Cloudflare purging disabled for this page under the 'Generic properties' tab"); }
+            List<string> urlsToPurge = new List<string>();
 
-            if (content == null) 
+            IPublishedContent content = Umbraco.TypedContent(args.nodeId);
+
+            KeyValuePair<List<StatusWithMessage>, List<string>> statusesAndUrls = new KeyValuePair<List<StatusWithMessage>, List<string>>(statuses, urlsToPurge);
+
+            statusesAndUrls = BuildUrlsToPurge(new List<IPublishedContent>() { content }, args.purgeChildren, statusesAndUrls);
+
+            if (statusesAndUrls.Key.Count(x => x.Success) == 0 && !statusesAndUrls.Value.Any())
             {
-                //if the content is null, there is a possibility its not published. lets see if we can find it through the content service.
-                IContent c = Services.ContentService.GetById(nodeId);
-
-                if(c != null && !c.Published){
-                    //we found it through the content service and its NOT published
-                    //if this is the case, then we should not allow them to purge the cache for an unpublished item. 
-                    return new StatusWithMessage(false, "You must publish this item before we will clear the cache.");
-                }
-                else
-                {
-                    return new StatusWithMessage(false, "Could not find the content with the node id of" + nodeId ); 
-                }
+                //No Successes
+                return new StatusWithMessage(false, CloudflareManager.PrintResultsSummary(statusesAndUrls.Key));
             }
 
-            string url = content.UrlWithDomain();
+            StatusWithMessage resultFromPurge = PurgeCacheForUrls(statusesAndUrls.Value);
 
-            return PurgeCacheForUrls(new string[1] { url });
-
+            if(resultFromPurge.Success)
+            {
+                return new StatusWithMessage(true, String.Format("{0}. There were {1} issues that are listed below: \n {2}", resultFromPurge.Message, statusesAndUrls.Key.Count(x => !x.Success), CloudflareManager.PrintResultsSummary(statusesAndUrls.Key)));
+            }
+            else
+            {
+                return resultFromPurge;
+            }
         }
 
 
@@ -257,11 +261,74 @@ namespace UmbracoFlare.ApiControllers
         {
             return Services.DomainService.GetAll(false).Select(x => x.DomainName);
         }
+
+
+        private KeyValuePair<List<StatusWithMessage>, List<string>> BuildUrlsToPurge(IEnumerable<IPublishedContent> contentToPurge, bool includeChildren,  KeyValuePair<List<StatusWithMessage>, List<string>> statusesAndUrls)
+        {
+            //statusesAndUrls.Key => Statuses
+            //SatusesAndUrls.Value => urls
+            
+            if(contentToPurge == null || !contentToPurge.Any())
+            {
+                return statusesAndUrls;
+            }
+            
+            foreach (IPublishedContent content in contentToPurge)
+            {
+                if (content == null)
+                {
+                    statusesAndUrls.Key.Add(new StatusWithMessage(false, "We could not purge the cache for unpublished content."));
+                }
+
+                /*
+                if (content.GetPropertyValue<bool>("cloudflareDisabledOnPublish"))
+                {
+                    statusesAndUrls.Key.Add(new StatusWithMessage(false, "You have Cloudflare purging disabled for page named " + content.Name + " under the 'Generic properties' tab"));
+                    continue;
+                }
+                 * */
+
+                //Add the url
+                statusesAndUrls.Value.Add(content.UrlWithDomain());
+
+                if (includeChildren)
+                {
+                    //recurse
+                    statusesAndUrls = BuildUrlsToPurge(content.Children, includeChildren, statusesAndUrls);
+                }
+                else
+                {
+                    return statusesAndUrls;
+                }
+            }
+            return statusesAndUrls;
+        }
+
+
+        private IEnumerable<string> AccountForWildCards(IEnumerable<string> urls)
+        {
+            IEnumerable<string> urlsWithWildCards = urls.Where(x => x.Contains('*'));
+
+            if(urlsWithWildCards == null || !urlsWithWildCards.Any())
+            {
+                return urls;
+            }
+
+            UmbracoHelper uh = new UmbracoHelper(UmbracoContext.Current);
+
+            return UmbracoUrlWildCardManager.Instance.GetAllUrlsForWildCardUrls(urlsWithWildCards, uh);
+        }
     }
 
     public class StaticFilePurgeParams
     {
         public string[] staticFiles { get; set; }
         public string forDomain { get; set; }
+    }
+
+    public class PurgeCacheForIdParams
+    {
+        public int nodeId { get; set; }
+        public bool purgeChildren { get; set; }
     }
 }

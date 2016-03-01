@@ -1,6 +1,32 @@
 ﻿angular.module("umbraco").controller("Cloudflare.Dashboard.Controller",
 	function ($scope, $timeout, cloudflareResource, notificationsService, navigationService, appState, eventsService) {
 
+	    $scope.oldConfig = null; //A holder to save the config in before updates, that way if the updates fail, we have a copy to revert back to.
+	    $scope.skipConfigUpdate = true; //We have a watch on $scope.config. Don't update it when we get the config from the server for the first time.
+	    $scope.uiConfig = {};
+
+
+	    //Get the configuration status of cloudflare
+
+	    cloudflareResource.getConfigurationStatus().success(function (config) {
+	        $scope.config = config;
+	        $scope.oldConfig = angular.copy(config); //Save a copy so we have somethint to revert back to if the configuration update fails.
+
+	        $scope.uiConfig.ApiKey = $scope.config.ApiKey;
+	        $scope.uiConfig.AccountEmail = $scope.config.AccountEmail;
+
+
+	        //Put this in a timout so the watch cycle
+	        $timeout(function () {
+	            $scope.skipConfigUpdate = false; //Any changes to $scope.config from here should be updated on the server.
+	        }, 0);
+	    });
+
+
+	    $scope.GoToCredentials = function () {
+	        var somethinhg = 1;
+	    };
+
 	    $scope.urls = [];
 	    $scope.purgeUrlsButtonText = "Purge Urls";
 	    
@@ -75,7 +101,7 @@
 	        cloudflareResource.purgeCacheForUrls(urls).success(function (statusWithMessage) {
 	            
 	            if (statusWithMessage.Success) {
-	                notificationsService.success("Purged Cache for urls Successfully!", "");
+	                notificationsService.success(statusWithMessage.Message, "");
 	            } else {
                     //Build the error
 	                notificationsService.error(statusWithMessage.Message, "");

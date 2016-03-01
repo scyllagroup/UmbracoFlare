@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<dashBoard xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <section alias="UmbracoFlareDashboardSection" xdt:Locator="Match(alias)" xdt:Transform="Remove"/>
+  <section alias="UmbracoFlareDashboardSection" xdt:Locator="Match(alias)" xdt:Transform="InsertIfMissing">
+    <areas>
+      <area>UmbracoFlare</area>
+    </areas>
+    <tab caption="Dashboard">
+      <control addPanel="true">
+        /App_Plugins/UmbracoFlare/backoffice/dashboardViews/Cloudflare-Dashboard-Tab.html
+      </control>
+    </tab>
+    <tab caption="Configuration">
+      <control addPanel="true">
+        /App_Plugins/UmbracoFlare/backoffice/dashboardViews/Cloudflare-Configuration-Tab.html
+      </control>
+    </tab>
+    <tab caption="License">
+      <control addPanel="true">
+        /App_Plugins/UmbracoFlare/backoffice/dashboardViews/Cloudflare-License-Tab.html
+      </control>
+    </tab>
+    <tab caption="Support">
+      <control addPanel="true">
+        /App_Plugins/UmbracoFlare/backoffice/dashboardViews/Cloudflare-Support-Tab.html
+      </control>
+    </tab>
+  </section>
+</dashBoard>

@@ -274,6 +274,7 @@
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="js\myjsfile.js" />
+    <Content Include="umbraco\Images\Tray\umbracoflare-logo-light.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -317,13 +318,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Plugins\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\UmbracoFlare\UmbracoFlare.csproj">
       <Project>{7b2eb8c0-7022-40d1-8331-759327d4a7d0}</Project>
       <Name>UmbracoFlare</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Plugins\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

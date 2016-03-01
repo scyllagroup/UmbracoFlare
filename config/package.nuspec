@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>UmbracoFlare</id>
+        <version>1.0.0</version>
+        <title>UmbracoFlare</title>
+        <authors>Logan Peck</authors>
+        <owners>The Scylla Group, Inc</owners>
+        <projectUrl>https://github.com/scyllagroup/UmbracoFlare</projectUrl>
+        <description><![CDATA[This project aims to provide a basic level of service integration between Cloudflare and the open-source ASP.NET CMS Umbraco.]]></description>
+        <tags>umbraco cloudflare umbracoflare</tags>
+        <iconUrl>http://mypackage.local/logo.png</iconUrl>
+        <licenseUrl>http://creativecommons.org/licenses/by-nc-sa/4.0/</licenseUrl>
+        <dependencies>
+            <dependency id="UmbracoCms.Core" version="7.3.0" />
+        </dependencies>
+    </metadata>
+</package>

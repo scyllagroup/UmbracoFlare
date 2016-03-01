@@ -1,5 +1,5 @@
 ﻿angular.module("umbraco").controller("Cloudflare.Configuration.Controller",
-	function ($scope, $timeout, cloudflareResource, notificationsService, navigationService) {
+	function ($scope, $timeout, cloudflareResource, notificationsService, navigationService, modals) {
 	    $scope.showConfigButtonText = "Config";
 
 	    //$scope.config = { PurgeCacheOn: true };
@@ -65,6 +65,11 @@
 	        $scope.umbracoDomains = domains;
 	    });
 
+	    $scope.openModal = function (type) {
+            var promise = modals.open(type)
+	    }
+
+
 	    $scope.UpdateCredentials = function () {
 	        $scope.syncUiConfigApiKey();
 	        $scope.syncUiConfigAccountEmail();
@@ -86,9 +91,14 @@
 	        });
 	    };
 
+	    $scope.showModal = function () {
+            $modal
+	    }
+
 
 	    $scope.togglePurgeCacheOn = function () {
 	        $scope.config.PurgeCacheOn = !$scope.config.PurgeCacheOn;
+	        $scope.UpdateCredentials();
 	    };
 
 	    //Takes the value from the UI and syncs it to the config which will trigger a server call to update it.

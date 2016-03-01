@@ -11,7 +11,7 @@
 
 	    $scope.purge = function () {
 	        $scope.busy = true;
-	        cloudflareResource.purgeCacheForNodeId(node.id).success(function (statusWithMessage) {
+	        cloudflareResource.purgeCacheForNodeId(node.id, $scope.purgeChildren).success(function (statusWithMessage) {
 	            //statusWithMessage = JSON.parse(statusWithMessage);
 	            $scope.busy = false;
 	            if (statusWithMessage.Success) {

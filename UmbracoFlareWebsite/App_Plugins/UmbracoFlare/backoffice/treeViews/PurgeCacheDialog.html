@@ -4,7 +4,11 @@
             <p class="abstract" ng-hide="success">
                 Are you sure you want to purge the Cloudflare cache for this node?
             </p>
-
+            <umb-pane>
+                <umb-control-group label="Include Children?">
+                    <input type="checkbox" ng-model="$parent.$parent.purgeChildren" />
+                </umb-control-group>
+            </umb-pane>
             <div class="alert alert-error" ng-show="error">
                 <h4>{{errorMsg}}</h4>
             </div>

@@ -18,6 +18,9 @@ using UmbracoFlare.Models.CropModels;
 using Umbraco.Web;
 using Umbraco.Core.Logging;
 using UmbracoFlare.Helpers;
+using Umbraco.Web.Cache;
+using Umbraco.Core.Cache;
+
 
 
 namespace UmbracoFlare.App_Start
@@ -28,11 +31,31 @@ namespace UmbracoFlare.App_Start
             : base()
         {
             ContentService.Published += PurgeCloudflareCache;
+            ContentService.Published += UpdateContentIdToUrlCache;
+
+            PageCacheRefresher.CacheUpdated += UpdateContentIdToUrlCache;
+
             MediaService.Saved += PurgeCloudflareCacheForMedia;
             DataTypeService.Saved += RefreshImageCropsCache;
             TreeControllerBase.MenuRendering += AddPurgeCacheForContentMenu;
         }
 
+
+        protected void UpdateContentIdToUrlCache(IPublishingStrategy strategy, PublishEventArgs<IContent> e)
+        {
+
+            UmbracoHelper uh = new UmbracoHelper(UmbracoContext.Current);
+            
+            foreach(IContent c in e.PublishedEntities)
+            {
+                if(c.HasPublishedVersion)
+                {
+                    string url = UmbracoContext.Current.UrlProvider.GetUrl(c.Id, Umbraco.Web.Routing.UrlProviderMode.AutoLegacy);
+
+                    UmbracoUrlWildCardManager.Instance.UpdateContentIdToUrlCache(c.Id, url);
+                }   
+            }
+        }
 
         protected override void ApplicationStarting(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
         {
@@ -81,7 +104,7 @@ namespace UmbracoFlare.App_Start
                 catch (Exception ex)
                 {
                     //continue;
-                }
+                } 
 
                 IPublishedContent publishedMedia = uh.TypedMedia(media.Id);
 
@@ -110,6 +133,22 @@ namespace UmbracoFlare.App_Start
             }
         }
 
+        
+        protected void UpdateContentIdToUrlCache(PageCacheRefresher refresher, CacheRefresherEventArgs args)
+        {
+           
+            UmbracoHelper uh = new UmbracoHelper(UmbracoContext.Current);
+            //UmbracoContext.Current.UrlProvider.GetUrl(case.Id)
+            /*foreach(IContent c in e.PublishedEntities)
+            {
+                if(c.HasPublishedVersion)
+                {
+                    string url = UmbracoContext.Current.UrlProvider.GetUrl(c.Id);
+
+                    UmbracoUrlWildCardManager.Instance.UpdateContentIdToUrlCache(c.Id, url);
+                }   
+            }*/
+        }
 
 
         protected void PurgeCloudflareCache(IPublishingStrategy strategy, PublishEventArgs<IContent> e)
@@ -135,7 +174,6 @@ namespace UmbracoFlare.App_Start
                     //continue;
                 }
                 
-
                 urls.Add(umbraco.library.NiceUrlWithDomain(content.Id));
             }
 
@@ -161,7 +199,7 @@ namespace UmbracoFlare.App_Start
 
             MenuItem menuItem = new MenuItem("purgeCache", "Purge Cloudflare Cache");
 
-            menuItem.Icon = "icon-documents";
+            menuItem.Icon = "umbracoflare-tiny";
 
             menuItem.LaunchDialogView("/App_Plugins/UmbracoFlare/backoffice/treeViews/PurgeCacheDialog.html", "Purge Cloudflare Cache");
 

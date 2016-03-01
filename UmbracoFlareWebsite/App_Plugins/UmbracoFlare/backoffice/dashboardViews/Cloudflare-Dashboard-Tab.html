@@ -1,64 +1,54 @@
 ﻿<!--Included in /config/Dashboard.config-->
-<div style="max-width: 1200px" ng-controller="Cloudflare.Dashboard.Controller" class="umbracoflare umb-pane umb-scrollable">
-    <div style="margin: 2rem 0 2rem 0">
-        <p>
-            <img src="/App_Plugins/UmbracoFlare/Assets/Media/UmbracoFlare-Logo.png"
-                 alt="UmbracoFlare aims to provide a basic level of service integration between Cloudflare and the open-source ASP.NET CMS Umbraco" />
-        </p>
+<div style="max-width: 1200px" ng-controller="Cloudflare.Dashboard.Controller" class="umbracoflare umb-scrollable">
+    <div class="cloudflare-config">
+        <h2>Status</h2>
+        <hr />
+        <h3>
+            Cloudflare Account: <span ng-show="config.CredentialsAreValid" class="-green">Associated <i class="fa fa-icon-remove-sign fa-lg active"></i></span><span ng-show="!config.CredentialsAreValid" class="-red">Not Associated <i class="fa fa-icon-ok-circle fa-lg inactive"></i></span>
+        </h3>
+        <p ng-hide="config.CredentialsAreValid">Your CloudFlare Account information needs to be associated
+with UmbracoFlare.</p>
+        <p ng-show="config.CredentialsAreValid">Good Job. Your CloudFlare Account information is associated
+properly</p>
+        <button class="btn btn-success"  switch-tab-on-click tab-index="2">Input CloudFlare Account Info</button>
     </div>
-    <h1>Small change</h1>
-    <p>You can purge your cloudflare pages or the entire site here. You can also clear the cache for a page by right clicking a node and choosing the option from the menu. Configure your cloudflare setup by entering the api key, account email you wish to clear in the content tab.</p>
-    <h2>Pick Static Files</h2>
-    <fs-picker selected-files="selectedFiles"></fs-picker>
-    <button class="btn btn-success" ng-click="purgeStaticFiles(selectedFiles)">Purge Static Files</button>
     
-    <br />
-    <br />
-
-    <form name="listUrls">
-        <h2>Purge By Url</h2>
-        <span>Urls must begin with a / and should not include the domain. Your current domain will be added to the url.</span>
-        <input-adder class="input-adder" ng-model="urls" on-submit="purgeUrls(collection)" submit-text="purgeUrlsButtonText"></input-adder>
-    </form>
-    <br />
-    <br />
-    <div class="purge-everything">
-        <h2>Purge everything on Site</h2>
+    <div ng-class="{'-grey-out' : !config.CredentialsAreValid}">
+        <div class="purge-everything">
+            <h2>Site Purge</h2>
+            <hr />
+            <p>Purge everything on your site. This will take a while depending
+on your site and servers. </p>
+            <button ng-disabled='!config.CredentialsAreValid' class="btn btn-success" ng-click="purgeEverything()">Purge Site</button>
+        </div>
+        <div class="manual-purge-container">
+            <h2>Manual Purge Options</h2>
+            <hr />
+            <div class="manual-purge-options">
+                <div class="manual-purge-option">
+                    <h3>Pick Files</h3>
+                    <p>Add individual files by selecting them from the picker below.
+Multiple files can added for purging together. </p>
+                    <br />
+                    <br />
+                    <div class="file-system-picker-control">
+                        <fs-picker selected-files="selectedFiles"></fs-picker>
+                    </div>
+                    <br/>
+                    <br />
+                    <button class="btn btn-success -float-right" ng-disabled='!config.CredentialsAreValid' ng-click="purgeStaticFiles(selectedFiles)">Purge Static Files</button>
+                </div>
+                <div class="manual-purge-option">
+                    <form ng-disabled='!config.CredentialsAreValid' name="listUrls">
+                        <h3>Purge By Url</h3>
+                        <p>URLs must be relative and begin with a / and should not include
+the domain. Your current domain will be added by the system. </p>
+                        <span>Example: /products/umbracoflare/dashboard.</span>
+                        <input-adder class="input-adder" ng-model="urls" on-submit="purgeUrls(collection)" submit-text="purgeUrlsButtonText"></input-adder>
+                    </form>
+                </div>
+            </div>
+        </div>
         
-        <button class="btn btn-danger"  ng-click="purgeEverything()">Purge Site</button>
     </div>
 </div>
-
-
-<style type="text/css">
-    .purge-everything {
-        margin-top: 50px;
-    }
-
-    .config-group {
-        margin: 10px 0;
-    }
-
-    .config-on {
-        color: white;
-        background: green;
-    }
-
-    .config-off {
-        color: white;
-        background: red;
-    }
-
-    .cloudflare-config {
-        height: 50%;
-        margin: 50px 0;
-    }
-
-    i.active {
-        color: #5cb85c;
-    }
-
-    i.inactive {
-        color: #d9534f;
-    }
-</style>

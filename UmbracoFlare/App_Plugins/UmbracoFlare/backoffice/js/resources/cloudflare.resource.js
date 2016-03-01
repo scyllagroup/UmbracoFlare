@@ -37,11 +37,11 @@
             });
         },
 
-        purgeCacheForNodeId: function (nodeId) {
+        purgeCacheForNodeId: function (nodeId, purgeChildren) {
             return $http({
                 url: "backoffice/UmbracoFlare/CloudflareUmbracoApi/PurgeCacheForContentNode",
                 method: "POST",
-                data: nodeId
+                data: { nodeId: nodeId, purgeChildren: purgeChildren }
             });
         },
 
