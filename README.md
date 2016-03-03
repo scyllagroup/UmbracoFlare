@@ -3,6 +3,8 @@ This project aims to provide a basic level of service integration between Cloudf
 
 Here is the package on our umbraco. https://our.umbraco.org/projects/backoffice-extensions/umbracoflare/
 
+Here is the home page for UmbracoFlare: http://umbracoflare.com/
+
 Install via Nuget using the command : `Install-Package UmbracoFlare`
 
 ###Please note: This is still in Beta so use at your own risk on production/live sites! 
