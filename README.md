@@ -16,6 +16,7 @@ Install via Nuget using the command : `Install-Package UmbracoFlare`
   - Purge everything on Cloudflare.
   - Purge certain urls on Cloudflare.
   - Purge static files on Cloudflare.
+  - Supports multiple root nodes / hostnames.
 
 ###Content Published Event
 Everytime content is published, UmbracoFlare will check to see if UmbracoFlare is on (in the config section). 
@@ -49,3 +50,9 @@ The credentials to hookup to CloudFlare can either be changed in the /config/clo
 
 ###Cloudflare rules
 If you find that cloudflare caching is not working with your site. Use redbot.org (or a similar tool) to determine if your server is sending your cache control header as "private". If so, you will want to update your page rules in the Cloudflare dashboard (not UmbracoFlare) to "purge everything" in the dropdown. 
+
+### Mutliple root nodes / host names
+UmbracoFlare supports sites with multiple root nodes and host names. UmbracoFlare uses the domains that are registered in Umbraco by right clicking a node and adding a Culture/Hostname. When purging through the context menu (right click) or by saving a piece of content, Umbracoflare will purge the cache for each culture/host name that is assigned (or inherited) to that node. When purging by url or static files, you will have the option to select what domain(s) you purge. When purging the entire site, UmbracoFlare will purge each domain that is registered with CLOUDFLARE.
+
+###Troubleshooting
+UmbracoFlare writes any fatal errors to the Umbraco trace log. We rely heavily on caching to ensure that UmbracoFlare is super fast, so sometimes recycling your app pool (touching your web.config will do this) is all that you need fix a problem in UmbracoFlare.
