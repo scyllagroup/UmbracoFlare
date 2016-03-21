@@ -7,6 +7,5 @@
                 // ---
                 // Wire the modal buttons into modal resolution actions.
                 $scope.close = modals.resolve;
-                
             }
         );

@@ -11,14 +11,14 @@ namespace UmbracoFlare.Manager
 {
     public class UmbracoUrlWildCardManager
     {
-        private Dictionary<int, string> _contentIdToUrlCache;
+        private Dictionary<int, IEnumerable<string>> _contentIdToUrlCache;
         private const string CACHE_KEY = "UmbracoUrlWildCardManager.ContentIdToUrlCache";
 
         private static UmbracoUrlWildCardManager _instance;
 
         private UmbracoUrlWildCardManager()
         {
-            _contentIdToUrlCache = HttpRuntime.Cache[CACHE_KEY] as Dictionary<int, string>;
+            _contentIdToUrlCache = HttpRuntime.Cache[CACHE_KEY] as Dictionary<int, IEnumerable<string>>;
         }
 
         public static UmbracoUrlWildCardManager Instance
@@ -81,10 +81,10 @@ namespace UmbracoFlare.Manager
             if(this._contentIdToUrlCache != null && this._contentIdToUrlCache.Any())
             {
                 //just return the cache
-                return this._contentIdToUrlCache.Select(x => x.Value);
+                return this._contentIdToUrlCache.SelectMany(x => x.Value);
             }
 
-            Dictionary<int, string> cache = new Dictionary<int, string>();
+            Dictionary<int, IEnumerable<string>> cache = new Dictionary<int, IEnumerable<string>>();
             List<string> urls = new List<string>();
 
             //Id like to use UmbracoContext.Current.ContentCache.GetByRoute() somehow but you cant always guarantee that urls
@@ -94,12 +94,17 @@ namespace UmbracoFlare.Manager
             
             foreach(IPublishedContent content in roots)
             {
-                cache.Add(content.Id, content.Url);
-                urls.Add(content.Url);
+                IEnumerable<string> contentUrls = UmbracoFlareDomainManager.Instance.GetUrlsForNode(content.Id, false);
+
+                cache.Add(content.Id, contentUrls);
+                urls.AddRange(contentUrls);
+
                 foreach(IPublishedContent childContent in content.Descendants())
                 {
-                    cache.Add(childContent.Id, childContent.Url);
-                    urls.Add(childContent.Url);
+                    IEnumerable<string> childContentUrls = UmbracoFlareDomainManager.Instance.GetUrlsForNode(childContent.Id, false);
+
+                    cache.Add(childContent.Id, childContentUrls);
+                    urls.AddRange(childContentUrls);
                 }
             }
 
@@ -110,7 +115,7 @@ namespace UmbracoFlare.Manager
             return urls;
         }
 
-        public void UpdateContentIdToUrlCache(int id, string url)
+        public void UpdateContentIdToUrlCache(int id, IEnumerable<string> urls)
         {
             if(this._contentIdToUrlCache == null || !this._contentIdToUrlCache.Any())
             {
@@ -120,15 +125,23 @@ namespace UmbracoFlare.Manager
             
             if(this._contentIdToUrlCache.ContainsKey(id))
             {
-                this._contentIdToUrlCache[id] = url;
+                this._contentIdToUrlCache[id] = urls;
             }
             else
             {
-                this._contentIdToUrlCache.Add(id, url);
+                this._contentIdToUrlCache.Add(id, urls);
             }
 
         }
 
+
+        public void DeletedContentIdToUrlCache()
+        {
+            HttpRuntime.Cache.Remove(CACHE_KEY);
+
+            this._contentIdToUrlCache = null;
+
+        }
 
     }
 }

@@ -1,0 +1,208 @@
+﻿ 2016-03-08 09:21:38,357 [P13588/D2/T1] INFO  Umbraco.Core.CoreBootManager - Umbraco 7.3.4 application starting on SCYLLA-SURFACE3
+ 2016-03-08 09:21:38,590 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Determining hash of code files on disk
+ 2016-03-08 09:21:38,626 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Hash determined (took 33ms)
+ 2016-03-08 09:21:38,962 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of umbraco.interfaces.IApplicationStartupHandler
+ 2016-03-08 09:21:39,768 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of umbraco.interfaces.IApplicationStartupHandler, found 0 (took 806ms)
+ 2016-03-08 09:21:39,809 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Core.PropertyEditors.IPropertyEditorValueConverter
+ 2016-03-08 09:21:39,825 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Core.PropertyEditors.IPropertyEditorValueConverter, found 0 (took 15ms)
+ 2016-03-08 09:21:39,825 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Core.PropertyEditors.IPropertyValueConverter
+ 2016-03-08 09:21:39,844 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Core.PropertyEditors.IPropertyValueConverter, found 0 (took 18ms)
+ 2016-03-08 09:21:39,890 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Web.Mvc.SurfaceController
+ 2016-03-08 09:21:39,902 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Web.Mvc.SurfaceController, found 0 (took 12ms)
+ 2016-03-08 09:21:39,902 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Web.WebApi.UmbracoApiController
+ 2016-03-08 09:21:39,932 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Web.WebApi.UmbracoApiController, found 0 (took 30ms)
+ 2016-03-08 09:21:40,123 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Core.Media.IThumbnailProvider
+ 2016-03-08 09:21:40,139 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Core.Media.IThumbnailProvider, found 0 (took 15ms)
+ 2016-03-08 09:21:40,139 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Core.Media.IImageUrlProvider
+ 2016-03-08 09:21:40,153 [P13588/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Core.Media.IImageUrlProvider, found 0 (took 13ms)
+ 2016-03-08 09:21:43,680 [P13588/D2/T1] INFO  Umbraco.Core.DatabaseContext - CanConnect = True
+ 2016-03-08 09:21:44,540 [P13588/D2/T1] INFO  Umbraco.Core.DatabaseContext - CanConnect = True
+ 2016-03-08 09:21:44,555 [P13588/D2/T1] INFO  Umbraco.Core.DatabaseContext - CanConnect = True
+ 2016-03-08 09:21:44,603 [P13588/D2/T1] WARN  Umbraco.Core.Sync.DatabaseServerMessenger - No last synced Id found, this generally means this is a new server/install. The server will rebuild its caches and indexes and then adjust it's last synced id to the latest found in the database and will start maintaining cache updates based on that id
+ 2016-03-08 09:21:44,643 [P13588/D2/T1] INFO  umbraco.content - Load Xml from file...
+ 2016-03-08 09:21:44,782 [P13588/D2/T1] INFO  umbraco.content - Loaded Xml from file.
+ 2016-03-08 09:21:44,810 [P13588/D2/T1] INFO  umbraco.content - Loading content from database...
+ 2016-03-08 09:21:46,929 [P13588/D2/T1] ERROR Umbraco.Core.Persistence.UmbracoDatabase - Database exception occurred
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'parentGroupId'.
+Invalid column name 'parentGroupId'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at Umbraco.Core.Persistence.Database.<Query>d__7`1.MoveNext()
+ClientConnectionId:ce87febb-1204-4974-8b11-9244a1ca6d7e
+Error Number:207,State:1,Class:16
+ 2016-03-08 09:21:46,942 [P13588/D2/T1] ERROR umbraco.cms.businesslogic.web.DocumentType - Exception while trying to build DTD for Xml schema; is Umbraco installed correctly and the connection string configured?
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'parentGroupId'.
+Invalid column name 'parentGroupId'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at Umbraco.Core.Persistence.Database.<Query>d__7`1.MoveNext()
+   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeBaseRepository`1.ContentTypeQueryMapper.MapGroupsAndProperties(Int32[] contentTypeIds, Database db, ISqlSyntaxProvider sqlSyntax, IDictionary`2& allPropertyTypeCollection, IDictionary`2& allPropertyGroupCollection)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeBaseRepository`1.ContentTypeQueryMapper.MapContentTypeChildren[TRepo,TId](IContentTypeComposition[] contentTypes, Database db, ISqlSyntaxProvider sqlSyntax, TRepo contentTypeRepository, IDictionary`2 allParentContentTypeIds)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeBaseRepository`1.ContentTypeQueryMapper.GetContentTypes[TRepo,TId](TId[] contentTypeIds, Database db, ISqlSyntaxProvider sqlSyntax, TRepo contentTypeRepository, ITemplateRepository templateRepository)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeRepository.PerformGetAll(Int32[] ids)
+   at Umbraco.Core.Persistence.Repositories.RepositoryBase`2.GetAll(TId[] ids)
+   at Umbraco.Core.Services.ContentTypeService.GetAllContentTypes(Int32[] ids)
+   at umbraco.cms.businesslogic.web.DocumentType.GetAllAsList()
+   at umbraco.cms.businesslogic.web.DocumentType.GenerateXmlDocumentType()
+ClientConnectionId:ce87febb-1204-4974-8b11-9244a1ca6d7e
+Error Number:207,State:1,Class:16
+ 2016-03-08 09:21:47,769 [P13588/D2/T1] ERROR Umbraco.Core.Persistence.UmbracoDatabase - Database exception occurred
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'parentGroupId'.
+Invalid column name 'parentGroupId'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at Umbraco.Core.Persistence.Database.<Query>d__7`1.MoveNext()
+ClientConnectionId:ce87febb-1204-4974-8b11-9244a1ca6d7e
+Error Number:207,State:1,Class:16
+ 2016-03-08 09:21:47,770 [P13588/D2/T1] ERROR Umbraco.Core.CoreBootManager - An error occurred running OnApplicationStarted for handler Umbraco.Web.BatchedDatabaseServerMessengerStartup
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'parentGroupId'.
+Invalid column name 'parentGroupId'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at Umbraco.Core.Persistence.Database.<Query>d__7`1.MoveNext()
+   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeBaseRepository`1.ContentTypeQueryMapper.MapGroupsAndProperties(Int32[] contentTypeIds, Database db, ISqlSyntaxProvider sqlSyntax, IDictionary`2& allPropertyTypeCollection, IDictionary`2& allPropertyGroupCollection)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeBaseRepository`1.ContentTypeQueryMapper.MapContentTypeChildren[TRepo,TId](IContentTypeComposition[] contentTypes, Database db, ISqlSyntaxProvider sqlSyntax, TRepo contentTypeRepository, IDictionary`2 allParentContentTypeIds)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeBaseRepository`1.ContentTypeQueryMapper.GetContentTypes[TRepo,TId](TId[] contentTypeIds, Database db, ISqlSyntaxProvider sqlSyntax, TRepo contentTypeRepository, ITemplateRepository templateRepository)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeRepository.PerformGetAll(Int32[] ids)
+   at Umbraco.Core.Persistence.Repositories.RepositoryBase`2.GetAll(TId[] ids)
+   at Umbraco.Core.Persistence.Repositories.ContentRepository.ProcessQuery(Sql sql)
+   at Umbraco.Core.Persistence.Repositories.VersionableRepositoryBase`2.GetPagedResultsByQuery[TDto,TContentBase](IQuery`1 query, Int64 pageIndex, Int32 pageSize, Int64& totalRecords, Tuple`2 nodeIdSelect, Func`2 processQuery, String orderBy, Direction orderDirection, Func`1 defaultFilter)
+   at Umbraco.Core.Persistence.Repositories.ContentRepository.GetPagedResultsByQuery(IQuery`1 query, Int64 pageIndex, Int32 pageSize, Int64& totalRecords, String orderBy, Direction orderDirection, String filter)
+   at Umbraco.Core.Services.ContentService.GetPagedDescendants(Int32 id, Int64 pageIndex, Int32 pageSize, Int64& totalChildren, String orderBy, Direction orderDirection, String filter)
+   at UmbracoExamine.UmbracoContentIndexer.PerformIndexAll(String type)
+   at UmbracoExamine.BaseUmbracoIndexer.IndexAll(String type)
+   at UmbracoExamine.BaseUmbracoIndexer.PerformIndexRebuild()
+   at UmbracoExamine.UmbracoContentIndexer.RebuildIndex()
+   at Examine.ExamineManager._RebuildIndex() in x:\Projects\Examine\Examine\Projects\Examine\ExamineManager.cs:line 238
+   at Umbraco.Web.WebBootManager.<InitializeResolvers>b__c()
+   at Umbraco.Core.Sync.DatabaseServerMessenger.Initialize()
+   at Umbraco.Web.BatchedDatabaseServerMessengerStartup.ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
+   at Umbraco.Core.ApplicationEventHandler.OnApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
+   at Umbraco.Core.CoreBootManager.<Complete>b__8(IApplicationEventHandler x)
+ClientConnectionId:ce87febb-1204-4974-8b11-9244a1ca6d7e
+Error Number:207,State:1,Class:16
+ 2016-03-08 09:21:47,799 [P13588/D2/T1] ERROR Umbraco.Core.UmbracoApplicationBase - An unhandled exception occurred
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'parentGroupId'.
+Invalid column name 'parentGroupId'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at Umbraco.Core.Persistence.Database.<Query>d__7`1.MoveNext()
+   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeBaseRepository`1.ContentTypeQueryMapper.MapGroupsAndProperties(Int32[] contentTypeIds, Database db, ISqlSyntaxProvider sqlSyntax, IDictionary`2& allPropertyTypeCollection, IDictionary`2& allPropertyGroupCollection)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeBaseRepository`1.ContentTypeQueryMapper.MapContentTypeChildren[TRepo,TId](IContentTypeComposition[] contentTypes, Database db, ISqlSyntaxProvider sqlSyntax, TRepo contentTypeRepository, IDictionary`2 allParentContentTypeIds)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeBaseRepository`1.ContentTypeQueryMapper.GetContentTypes[TRepo,TId](TId[] contentTypeIds, Database db, ISqlSyntaxProvider sqlSyntax, TRepo contentTypeRepository, ITemplateRepository templateRepository)
+   at Umbraco.Core.Persistence.Repositories.ContentTypeRepository.PerformGetAll(Int32[] ids)
+   at Umbraco.Core.Persistence.Repositories.RepositoryBase`2.GetAll(TId[] ids)
+   at Umbraco.Core.Persistence.Repositories.ContentRepository.ProcessQuery(Sql sql)
+   at Umbraco.Core.Persistence.Repositories.VersionableRepositoryBase`2.GetPagedResultsByQuery[TDto,TContentBase](IQuery`1 query, Int64 pageIndex, Int32 pageSize, Int64& totalRecords, Tuple`2 nodeIdSelect, Func`2 processQuery, String orderBy, Direction orderDirection, Func`1 defaultFilter)
+   at Umbraco.Core.Persistence.Repositories.ContentRepository.GetPagedResultsByQuery(IQuery`1 query, Int64 pageIndex, Int32 pageSize, Int64& totalRecords, String orderBy, Direction orderDirection, String filter)
+   at Umbraco.Core.Services.ContentService.GetPagedDescendants(Int32 id, Int64 pageIndex, Int32 pageSize, Int64& totalChildren, String orderBy, Direction orderDirection, String filter)
+   at UmbracoExamine.UmbracoContentIndexer.PerformIndexAll(String type)
+   at UmbracoExamine.BaseUmbracoIndexer.IndexAll(String type)
+   at UmbracoExamine.BaseUmbracoIndexer.PerformIndexRebuild()
+   at UmbracoExamine.UmbracoContentIndexer.RebuildIndex()
+   at Examine.ExamineManager._RebuildIndex() in x:\Projects\Examine\Examine\Projects\Examine\ExamineManager.cs:line 238
+   at Umbraco.Web.WebBootManager.<InitializeResolvers>b__c()
+   at Umbraco.Core.Sync.DatabaseServerMessenger.Initialize()
+   at Umbraco.Web.BatchedDatabaseServerMessengerStartup.ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
+   at Umbraco.Core.ApplicationEventHandler.OnApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
+   at Umbraco.Core.CoreBootManager.<Complete>b__8(IApplicationEventHandler x)
+   at Umbraco.Core.EnumerableExtensions.ForEach[TItem](IEnumerable`1 items, Action`1 action)
+   at Umbraco.Core.CoreBootManager.Complete(Action`1 afterComplete)
+   at Umbraco.Web.WebBootManager.Complete(Action`1 afterComplete)
+   at Umbraco.Core.UmbracoApplicationBase.StartApplication(Object sender, EventArgs e)
+ClientConnectionId:ce87febb-1204-4974-8b11-9244a1ca6d7e
+Error Number:207,State:1,Class:16
+ 2016-03-08 09:21:51,077 [P13588/D2/T12] INFO  umbraco.content - Save Xml to file...
+ 2016-03-08 09:21:51,126 [P13588/D2/T9] INFO  umbraco.content - Saved Xml to file.
+ 2016-03-08 09:22:28,058 [P13588/D2/T10] INFO  Umbraco.Core.UmbracoApplicationBase - Application shutdown. Details: InitializationError
+
+_shutDownMessage=Initialization Error
+HostingEnvironment initiated shutdown
+HostingEnvironment caused shutdown
+
+_shutDownStack=   at System.Environment.GetStackTrace(Exception e, Boolean needFileInfo)
+   at System.Environment.get_StackTrace()
+   at System.Web.Hosting.HostingEnvironment.InitiateShutdownInternal()
+   at System.Web.Hosting.HostingEnvironment.InitiateShutdownWithoutDemand()
+   at System.Web.HttpRuntime.ShutdownAppDomain(String stackTrace)
+   at System.Web.HttpRuntime.AppDomainShutdownTimerCallback(Object state)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.TimerQueueTimer.CallCallback()
+   at System.Threading.TimerQueueTimer.Fire()
+   at System.Threading.TimerQueue.FireNextTimers()
+ 2016-03-08 14:51:40,972 [P6004/D2/T1] INFO  Umbraco.Core.CoreBootManager - Umbraco 7.3.4 application starting on SCYLLA-SURFACE3
+ 2016-03-08 14:51:41,101 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Determining hash of code files on disk
+ 2016-03-08 14:51:41,134 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Hash determined (took 31ms)
+ 2016-03-08 14:51:41,442 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of umbraco.interfaces.IApplicationStartupHandler
+ 2016-03-08 14:51:41,464 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of umbraco.interfaces.IApplicationStartupHandler, found 0 (took 22ms)
+ 2016-03-08 14:51:41,517 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Core.PropertyEditors.IPropertyEditorValueConverter
+ 2016-03-08 14:51:41,519 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Core.PropertyEditors.IPropertyEditorValueConverter, found 0 (took 2ms)
+ 2016-03-08 14:51:41,520 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Core.PropertyEditors.IPropertyValueConverter
+ 2016-03-08 14:51:41,522 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Core.PropertyEditors.IPropertyValueConverter, found 0 (took 2ms)
+ 2016-03-08 14:51:41,565 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Web.Mvc.SurfaceController
+ 2016-03-08 14:51:41,566 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Web.Mvc.SurfaceController, found 0 (took 1ms)
+ 2016-03-08 14:51:41,567 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Web.WebApi.UmbracoApiController
+ 2016-03-08 14:51:41,574 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Web.WebApi.UmbracoApiController, found 0 (took 7ms)
+ 2016-03-08 14:51:41,649 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Core.Media.IThumbnailProvider
+ 2016-03-08 14:51:41,650 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Core.Media.IThumbnailProvider, found 0 (took 1ms)
+ 2016-03-08 14:51:41,650 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Core.Media.IImageUrlProvider
+ 2016-03-08 14:51:41,651 [P6004/D2/T1] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Core.Media.IImageUrlProvider, found 0 (took 1ms)
+ 2016-03-08 14:51:43,824 [P6004/D2/T1] INFO  Umbraco.Core.DatabaseContext - CanConnect = True
+ 2016-03-08 14:51:44,282 [P6004/D2/T1] INFO  Umbraco.Core.DatabaseContext - CanConnect = True
+ 2016-03-08 14:51:44,296 [P6004/D2/T1] INFO  Umbraco.Core.DatabaseContext - CanConnect = True
+ 2016-03-08 14:51:44,324 [P6004/D2/T1] INFO  Umbraco.Web.Cache.CacheRefresherEventHandler - Initializing Umbraco internal event handlers for cache refreshing
+ 2016-03-08 14:51:44,356 [P6004/D2/T1] INFO  Umbraco.Web.Search.ExamineEvents - Initializing Examine and binding to business logic events
+ 2016-03-08 14:51:44,485 [P6004/D2/T1] INFO  Umbraco.Web.Search.ExamineEvents - Adding examine event handlers for index providers: 3
+ 2016-03-08 14:51:44,511 [P6004/D2/T1] INFO  Umbraco.Core.CoreBootManager - Umbraco application startup complete (took 3860ms)
+ 2016-03-08 14:51:47,145 [P6004/D2/T9] INFO  Umbraco.Core.Sync.ApplicationUrlHelper - ApplicationUrl: http://umbracoflare.local:80/umbraco (UmbracoModule request)
+ 2016-03-08 14:53:50,770 [P6004/D2/T7] INFO  umbraco.content - Load Xml from file...
+ 2016-03-08 14:53:50,796 [P6004/D2/T7] INFO  umbraco.content - Loaded Xml from file.
+ 2016-03-08 14:53:50,851 [P6004/D2/T7] INFO  Umbraco.Core.PluginManager - Starting resolution types of Umbraco.Core.Persistence.Mappers.BaseMapper
+ 2016-03-08 14:53:50,957 [P6004/D2/T7] INFO  Umbraco.Core.PluginManager - Completed resolution of types of Umbraco.Core.Persistence.Mappers.BaseMapper, found 0 (took 105ms)

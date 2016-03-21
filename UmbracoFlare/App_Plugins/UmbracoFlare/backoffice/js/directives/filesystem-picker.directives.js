@@ -465,7 +465,7 @@ angular.module("umbraco.directives")
 
         link: function (scope, element, attrs) {
 
-            var allowedFileExtensions = ["aspx", "js", "css", "jpg", "png", "gif", "html"];
+            var allowedFileExtensions = ["aspx", "js", "css", "jpg", "jpeg", "png", "gif", "html"];
 
             localizationService.localize("general_search").then(function (value) {
                 scope.searchAltText = value;
@@ -522,13 +522,13 @@ angular.module("umbraco.directives")
                 icon.addClass(node.cssClass);
                 icon.attr("title", node.routePath);
 
-                if (node.name.match(/\.(gif|jpg|jpeg|tiff|png)$/i)) {
-                    icon.hide();
-                    var thumbnailPath = '/umbraco/backoffice/FileSystemPicker/FileSystemThumbnailApi/GetThumbnail?width=150&amp;imagePath=' + node.metaData.startfolder + node.id;
-                    element.find("a:first").append($('<img src="' + thumbnailPath + '" /><p>' + node.name + '</p>'));
-                } else {
+                //if (node.name.match(/\.(gif|jpg|jpeg|tiff|png)$/i)) {
+                    //icon.hide();
+                    //var thumbnailPath = '/umbraco/backoffice/FileSystemPicker/FileSystemThumbnailApi/GetThumbnail?width=150&amp;imagePath=' + node.metaData.startfolder + node.id;
+                    //element.find("a:first").append($('<img src="' + thumbnailPath + '" /><p>' + node.name + '</p>'));
+                //} else {
                     element.find("a:first").text(node.name);
-                }
+                //}
 
                 if (node.icon === "icon-document") {
                     element.find("a.fs-upload").remove();

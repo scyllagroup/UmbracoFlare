@@ -7,11 +7,12 @@
 	    $scope.skipConfigUpdate = true; //We have a watch on $scope.config. Don't update it when we get the config from the server for the first time.
 	    $scope.uiConfig = {};
 
-
+        /*
 	    //Keep track of the list of domains available to use on cloudflare
 	    $scope.domains = [];
 	    $scope.activeDomain = "";
 	    $scope.staticFileActiveDomain = "";
+
 	    //Add some watches to watch the domains so we can update the available domain list.
 	    $scope.$watch('config.AdditionalUrls', function () {
 	        buildDomainList();
@@ -42,7 +43,7 @@
 	            });
 	        }
 	    }
-
+        */
 	    //Get the configuration status of cloudflare
 
 	    cloudflareResource.getConfigurationStatus().success(function (config) {
@@ -60,7 +61,7 @@
 	    });
 
 	    //Get all of the domains registered with umbraco
-	    cloudflareResource.getUmbracoDomains().success(function (domains) {
+	    cloudflareResource.getAllowedDomains().success(function (domains) {
 	        //domains = JSON.parse(domains);
 	        $scope.umbracoDomains = domains;
 	    });

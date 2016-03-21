@@ -141,6 +141,7 @@
     <Compile Include="ImageCropperHelpers\Caching\ImageCropperCacheManager.cs" />
     <Compile Include="Manager\CloudflareManager.cs" />
     <Compile Include="ImageCropperHelpers\ImageCropperManager.cs" />
+    <Compile Include="Manager\UmbracoFlareDomainManager.cs" />
     <Compile Include="Manager\UmbracoUrlWildCardManager.cs" />
     <Compile Include="Models\BasicCloudflareResponse.cs" />
     <Compile Include="Models\CloudflareConfigModel.cs" />
@@ -149,6 +150,9 @@
     <Compile Include="Models\CropModels\FocalPoint.cs" />
     <Compile Include="Models\CropModels\UmbracoFile.cs" />
     <Compile Include="Models\ListZonesResponse.cs" />
+    <Compile Include="Models\PurgeCacheForUrlsRequestModel.cs" />
+    <Compile Include="Models\PurgeStaticFilesRequestModel.cs" />
+    <Compile Include="Models\SslEnabledResponse.cs" />
     <Compile Include="Models\StatusWithMessage.cs" />
     <Compile Include="Models\UserDetails.cs" />
     <Compile Include="Models\Zone.cs" />
@@ -157,7 +161,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App_Plugins\UmbracoFlare\package.manifest" />
-    <None Include="Config\cloudflare.config" />
+    <None Include="Config\cloudflare.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="transforms\applications.config.install.xdt" />
     <None Include="transforms\applications.config.uninstall.xdt">
       <SubType>Designer</SubType>
@@ -198,11 +204,13 @@
     <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\Cloudflare-Dashboard-Tab.html" />
     <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\Cloudflare-License-Tab.html" />
     <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\Cloudflare-Support-Tab.html" />
+    <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\domainDialog.html" />
     <Content Include="App_Plugins\UmbracoFlare\backoffice\directiveViews\filesystem-picker-dialog.html" />
     <Content Include="App_Plugins\UmbracoFlare\backoffice\directiveViews\filesystem-picker.html" />
     <Content Include="App_Plugins\UmbracoFlare\backoffice\directiveViews\inputAdder.html" />
     <Content Include="App_Plugins\UmbracoFlare\backoffice\directiveViews\switchTabOnClickView.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\confirmModal.controller.js" />
+    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\cloudflare.domainDialog.controller.js" />
+    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\confirmmodal.controller.js" />
     <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\infomodal.controller.js" />
     <Content Include="App_Plugins\UmbracoFlare\backoffice\js\directives\bnModals.directive.js" />
     <Content Include="App_Plugins\UmbracoFlare\backoffice\js\directives\switchTabOnClick.directive.js" />

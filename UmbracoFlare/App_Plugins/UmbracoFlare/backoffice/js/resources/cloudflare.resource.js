@@ -2,11 +2,11 @@
     //the factory object returned
     return {
         //call the Cloudflare Umbraco APi Controller that we created on the backend under the controllers folder
-        purgeCacheForUrls: function (urls) {
+        purgeCacheForUrls: function (urls, domains) {
             return $http({
                 url: "backoffice/UmbracoFlare/CloudflareUmbracoApi/PurgeCacheForUrls",
                 method: "POST",
-                data: urls
+                data: { Urls: urls, Domains: domains }
             });
         },
 
@@ -23,10 +23,10 @@
         },
 
 
-        purgeStaticFiles: function(staticFiles){
+        purgeStaticFiles: function(staticFiles, domains){
             return $http.post(
                 "backoffice/UmbracoFlare/CloudflareUmbracoApi/PurgeStaticFiles",
-                staticFiles
+                { StaticFiles: staticFiles, Hosts: domains }
             );
         },
 
@@ -53,9 +53,9 @@
             });
         },
 
-        getUmbracoDomains: function () {
+        getAllowedDomains: function () {
             return $http({
-                url: "backoffice/UmbracoFlare/CloudflareUmbracoApi/GetDomainsRegisteredWithUmbraco",
+                url: "backoffice/UmbracoFlare/CloudflareUmbracoApi/GetAllowedDomains",
                 method: "GET"
             });
         }

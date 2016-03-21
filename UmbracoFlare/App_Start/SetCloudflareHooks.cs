@@ -20,6 +20,7 @@ using Umbraco.Core.Logging;
 using UmbracoFlare.Helpers;
 using Umbraco.Web.Cache;
 using Umbraco.Core.Cache;
+using UmbracoFlare.ApiControllers;
 
 
 
@@ -33,8 +34,6 @@ namespace UmbracoFlare.App_Start
             ContentService.Published += PurgeCloudflareCache;
             ContentService.Published += UpdateContentIdToUrlCache;
 
-            PageCacheRefresher.CacheUpdated += UpdateContentIdToUrlCache;
-
             MediaService.Saved += PurgeCloudflareCacheForMedia;
             DataTypeService.Saved += RefreshImageCropsCache;
             TreeControllerBase.MenuRendering += AddPurgeCacheForContentMenu;
@@ -43,17 +42,38 @@ namespace UmbracoFlare.App_Start
 
         protected void UpdateContentIdToUrlCache(IPublishingStrategy strategy, PublishEventArgs<IContent> e)
         {
-
             UmbracoHelper uh = new UmbracoHelper(UmbracoContext.Current);
             
             foreach(IContent c in e.PublishedEntities)
             {
                 if(c.HasPublishedVersion)
                 {
-                    string url = UmbracoContext.Current.UrlProvider.GetUrl(c.Id, Umbraco.Web.Routing.UrlProviderMode.AutoLegacy);
+                    IEnumerable<string> urls = UmbracoFlareDomainManager.Instance.GetUrlsForNode(c, false);
 
-                    UmbracoUrlWildCardManager.Instance.UpdateContentIdToUrlCache(c.Id, url);
+                    if(urls.Contains("#"))
+                    {
+                        //When a piece of content is first saved, we cannot get the url, if that is the case then we need to just
+                        //invalidate the who ContentIdToUrlCache, that way when we request all of the urls agian, it will pick it up.
+                        UmbracoUrlWildCardManager.Instance.DeletedContentIdToUrlCache();
+                    }
+                    else
+                    {
+                        UmbracoUrlWildCardManager.Instance.UpdateContentIdToUrlCache(c.Id, urls);
+                    }
+
                 }   
+
+
+                //TODO: Does this need to be here?
+                //We also need to update the descendants now because their urls changed
+                IEnumerable<IContent> descendants = c.Descendants();
+
+                foreach(IContent desc in descendants)
+                {
+                    IEnumerable<string> descUrls = UmbracoFlareDomainManager.Instance.GetUrlsForNode(desc.Id, false);
+
+                    UmbracoUrlWildCardManager.Instance.UpdateContentIdToUrlCache(c.Id, descUrls);
+                }
             }
         }
 
@@ -88,10 +108,18 @@ namespace UmbracoFlare.App_Start
 
             UmbracoHelper uh = new UmbracoHelper(UmbracoContext.Current);
 
+            //GetUmbracoDomains
+            IEnumerable<string> domains = UmbracoFlareDomainManager.Instance.AllowedDomains;
            
             //delete the cloudflare cache for the saved entities.
             foreach (IMedia media in e.SavedEntities)
             {
+                if(media.IsNewEntity())
+                {
+                    //If its new we don't want to purge the cache as this causes slow upload times.
+                    continue;
+                }
+
                 try
                 {
                     //Check to see if the page has cache purging on publish disabled.
@@ -115,13 +143,14 @@ namespace UmbracoFlare.App_Start
                 }
                 foreach(Crop crop in imageCropSizes)
                 {
-                    urls.Add(UrlHelper.MakeFullUrlWithDomain(publishedMedia.GetCropUrl(crop.alias)));    
+                    urls.Add(publishedMedia.GetCropUrl(crop.alias));    
 
                 }
-                urls.Add(UrlHelper.MakeFullUrlWithDomain(publishedMedia.Url));
+                urls.Add(publishedMedia.Url);
             }
 
-            List<StatusWithMessage> results = CloudflareManager.Instance.PurgePages(urls);
+
+            List<StatusWithMessage> results = CloudflareManager.Instance.PurgePages(UrlHelper.MakeFullUrlWithDomain(urls, domains,true));
 
             if (results.Any() && results.Where(x => !x.Success).Any())
             {
@@ -134,22 +163,6 @@ namespace UmbracoFlare.App_Start
         }
 
         
-        protected void UpdateContentIdToUrlCache(PageCacheRefresher refresher, CacheRefresherEventArgs args)
-        {
-           
-            UmbracoHelper uh = new UmbracoHelper(UmbracoContext.Current);
-            //UmbracoContext.Current.UrlProvider.GetUrl(case.Id)
-            /*foreach(IContent c in e.PublishedEntities)
-            {
-                if(c.HasPublishedVersion)
-                {
-                    string url = UmbracoContext.Current.UrlProvider.GetUrl(c.Id);
-
-                    UmbracoUrlWildCardManager.Instance.UpdateContentIdToUrlCache(c.Id, url);
-                }   
-            }*/
-        }
-
 
         protected void PurgeCloudflareCache(IPublishingStrategy strategy, PublishEventArgs<IContent> e)
         {
@@ -173,8 +186,8 @@ namespace UmbracoFlare.App_Start
                 {
                     //continue;
                 }
-                
-                urls.Add(umbraco.library.NiceUrlWithDomain(content.Id));
+
+                urls.AddRange(UmbracoFlareDomainManager.Instance.GetUrlsForNode(content, false));
             }
 
             List<StatusWithMessage> results = CloudflareManager.Instance.PurgePages(urls);

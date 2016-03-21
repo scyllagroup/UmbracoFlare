@@ -17,6 +17,7 @@ using Umbraco.FileSystemPicker.Controllers;
 using System.IO;
 using Umbraco.Core.IO;
 using UmbracoFlare.Helpers;
+using Umbraco.Web.Routing;
 
 namespace UmbracoFlare.ApiControllers
 {
@@ -27,16 +28,37 @@ namespace UmbracoFlare.ApiControllers
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         [HttpPost]
-        public StatusWithMessage PurgeCacheForUrls([FromBody]IEnumerable<string> urls)
+        public StatusWithMessage PurgeCacheForUrls([FromBody]PurgeCacheForUrlsRequestModel model)
         {
-            if (urls == null || !urls.Any()) 
+            /*Important to note that the urls can come in here in two different ways. 
+             *1) They can come in here without domains on them. If that is the case then the domains property should have values.
+             *      1a) They will need to have the urls built by appending each domain to each url. These urls technically might not exist
+             *          but that is the responsibility of whoever called this method to ensure that. They will still go to cloudflare even know the
+             *          urls physically do not exists, which is fine because it won't cause an error. 
+             *2) They can come in here with domains, if that is the case then we are good to go, no work needed.
+             * 
+             * */
+
+            if (model.Urls == null || !model.Urls.Any()) 
             { 
                 return new StatusWithMessage( false, "You must provide urls to clear the cache for.") ;
             }
 
-            urls = AccountForWildCards(urls);
+            List<string> builtUrls = new List<string>();
 
-            List<StatusWithMessage> results = CloudflareManager.Instance.PurgePages(urls);
+            //Check to see if there are any domains. If there are, then we know that we need to build the urls using the domains
+            if(model.Domains != null && model.Domains.Any())
+            {
+                builtUrls.AddRange(UrlHelper.MakeFullUrlWithDomain(model.Urls, model.Domains, true));   
+            }
+            else
+            {
+                builtUrls = model.Urls.ToList();
+            }
+
+            builtUrls.AddRange(AccountForWildCards(builtUrls));
+            
+            List<StatusWithMessage> results = CloudflareManager.Instance.PurgePages(builtUrls);
 
             if(results.Any(x => !x.Success))
             {
@@ -44,35 +66,31 @@ namespace UmbracoFlare.ApiControllers
             }
             else
             {
-                return new StatusWithMessage(true, String.Format("{0} urls purged successfully.", urls.Count()));
+                return new StatusWithMessage(true, String.Format("{0} urls purged successfully.", results.Count(x => x.Success)));
             }
         }
 
         [HttpPost]
-        public StatusWithMessage PurgeStaticFiles([FromBody]string[] staticFiles)
+        public StatusWithMessage PurgeStaticFiles([FromBody]PurgeStaticFilesRequestModel model)
         {
             List<string> allowedFileExtensions = new List<string>(){".css", ".js", ".jpg", ".png", ".gif", ".aspx", ".html"};   
             string generalSuccessMessage = "Successfully purged the cache for the selected static files.";
             string generalErrorMessage = "Sorry, we could not purge the cache for the static files.";
-            if (staticFiles == null)
+            if (model.StaticFiles == null)
             {
                 return new StatusWithMessage(false, generalErrorMessage);
             }
 
-            if (!staticFiles.Any())
+            if (!model.StaticFiles.Any())
             {
                 return new StatusWithMessage(true, generalSuccessMessage);
             }
 
             List<StatusWithMessage> errors;
-            IEnumerable<string> allFilePaths = GetAllFilePaths(staticFiles, out errors);
+            IEnumerable<string> allFilePaths = GetAllFilePaths(model.StaticFiles, out errors);
 
             //Save a list of each individual file if it errors so we can give detailed errors to the user.
             List<StatusWithMessage> results = new List<StatusWithMessage>();
-
-            string currentDomain = UrlHelper.GetCurrentDomainWithScheme(true);
-
-            UrlHelper.GetCurrentDomainWithScheme(true);
 
             List<string> fullUrlsToPurge = new List<string>();
             //build the urls with the domain we are on now
@@ -83,12 +101,10 @@ namespace UmbracoFlare.ApiControllers
                 if(!allowedFileExtensions.Contains(extension))
                 {
                     //results.Add(new StatusWithMessage(false, String.Format("You cannot purge the file {0} because its extension is not allowed.", filePath)));
-                
                 }
                 else
                 {
-                    string urlToPurge = currentDomain + filePath;
-                    fullUrlsToPurge.Add(urlToPurge);
+                    fullUrlsToPurge.AddRange(UrlHelper.MakeFullUrlWithDomain(filePath, model.Hosts, true));                    
                 }
             }
 
@@ -176,10 +192,17 @@ namespace UmbracoFlare.ApiControllers
         [HttpPost]
         public StatusWithMessage PurgeAll()
         {
-            //get the current domain 
-            string currentDomain = UrlHelper.GetCurrentDomainWithScheme(true);
+            //it doesn't matter what domain we pick bc it will purge everything. 
+            IEnumerable<string> domains = UmbracoFlareDomainManager.Instance.GetDomainsFromCloudflareZones();
 
-            return CloudflareManager.Instance.PurgeEverything(currentDomain);
+            List<StatusWithMessage> results = new List<StatusWithMessage>();
+
+            foreach(string domain in domains)
+            {
+                results.Add(CloudflareManager.Instance.PurgeEverything(domain));
+            }
+
+            return new StatusWithMessage() { Success = !results.Any(x => !x.Success), Message = CloudflareManager.PrintResultsSummary(results) };
         }
 
 
@@ -207,27 +230,19 @@ namespace UmbracoFlare.ApiControllers
 
             if (!CloudflareConfiguration.Instance.PurgeCacheOn) { return new StatusWithMessage(false, CloudflareMessages.CLOULDFLARE_DISABLED); }
 
-            List<StatusWithMessage> statuses = new List<StatusWithMessage>();
+            List<string> domains = new List<string>();
 
             List<string> urlsToPurge = new List<string>();
 
             IPublishedContent content = Umbraco.TypedContent(args.nodeId);
 
-            KeyValuePair<List<StatusWithMessage>, List<string>> statusesAndUrls = new KeyValuePair<List<StatusWithMessage>, List<string>>(statuses, urlsToPurge);
 
-            statusesAndUrls = BuildUrlsToPurge(new List<IPublishedContent>() { content }, args.purgeChildren, statusesAndUrls);
+            List<string> urls = BuildUrlsToPurge(content, args.purgeChildren);
 
-            if (statusesAndUrls.Key.Count(x => x.Success) == 0 && !statusesAndUrls.Value.Any())
-            {
-                //No Successes
-                return new StatusWithMessage(false, CloudflareManager.PrintResultsSummary(statusesAndUrls.Key));
-            }
-
-            StatusWithMessage resultFromPurge = PurgeCacheForUrls(statusesAndUrls.Value);
-
+            StatusWithMessage resultFromPurge = PurgeCacheForUrls(new PurgeCacheForUrlsRequestModel() { Urls = urls, Domains = null });
             if(resultFromPurge.Success)
             {
-                return new StatusWithMessage(true, String.Format("{0}. There were {1} issues that are listed below: \n {2}", resultFromPurge.Message, statusesAndUrls.Key.Count(x => !x.Success), CloudflareManager.PrintResultsSummary(statusesAndUrls.Key)));
+                return new StatusWithMessage(true, String.Format("{0}", resultFromPurge.Message));
             }
             else
             {
@@ -257,51 +272,24 @@ namespace UmbracoFlare.ApiControllers
 
 
         [HttpGet]
-        public IEnumerable<string> GetDomainsRegisteredWithUmbraco()
+        public IEnumerable<string> GetAllowedDomains()
         {
-            return Services.DomainService.GetAll(false).Select(x => x.DomainName);
+            return UmbracoFlareDomainManager.Instance.AllowedDomains;
         }
 
 
-        private KeyValuePair<List<StatusWithMessage>, List<string>> BuildUrlsToPurge(IEnumerable<IPublishedContent> contentToPurge, bool includeChildren,  KeyValuePair<List<StatusWithMessage>, List<string>> statusesAndUrls)
+        private List<string> BuildUrlsToPurge(IPublishedContent contentToPurge, bool includeChildren)
         {
-            //statusesAndUrls.Key => Statuses
-            //SatusesAndUrls.Value => urls
+            List<string> urls = new List<string>();
             
-            if(contentToPurge == null || !contentToPurge.Any())
+            if(contentToPurge == null)
             {
-                return statusesAndUrls;
+                return urls;
             }
+
+            urls.AddRange(UmbracoFlareDomainManager.Instance.GetUrlsForNode(contentToPurge.Id, includeChildren));
             
-            foreach (IPublishedContent content in contentToPurge)
-            {
-                if (content == null)
-                {
-                    statusesAndUrls.Key.Add(new StatusWithMessage(false, "We could not purge the cache for unpublished content."));
-                }
-
-                /*
-                if (content.GetPropertyValue<bool>("cloudflareDisabledOnPublish"))
-                {
-                    statusesAndUrls.Key.Add(new StatusWithMessage(false, "You have Cloudflare purging disabled for page named " + content.Name + " under the 'Generic properties' tab"));
-                    continue;
-                }
-                 * */
-
-                //Add the url
-                statusesAndUrls.Value.Add(content.UrlWithDomain());
-
-                if (includeChildren)
-                {
-                    //recurse
-                    statusesAndUrls = BuildUrlsToPurge(content.Children, includeChildren, statusesAndUrls);
-                }
-                else
-                {
-                    return statusesAndUrls;
-                }
-            }
-            return statusesAndUrls;
+            return urls;
         }
 
 

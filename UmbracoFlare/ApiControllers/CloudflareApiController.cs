@@ -86,6 +86,60 @@ namespace UmbracoFlare.ApiControllers
 
 
         /// <summary>
+        /// Gets the user details for the current users credentials in the config. This is useful to test if the credentials are valid.  
+        /// </summary>
+        /// <returns>The user details object.</returns>
+        public SslEnabledResponse GetSSLStatus(string zoneId)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpRequestMessage request = new HttpRequestMessage()
+                    {
+                        RequestUri = new Uri(CLOUDFLARE_API_BASE_URL + "zones/" + zoneId + "/settings/ssl"),
+                        Method = HttpMethod.Get,
+                    };
+
+                    //Add in the ApiKey and AccountEmail
+                    AddRequestHeaders(request);
+
+                    var responseContent = client.SendAsync(request).Result.Content;
+
+                    var stringVersion = responseContent.ReadAsStringAsync().Result;
+
+                    try
+                    {
+                        SslEnabledResponse response = responseContent.ReadAsAsync<SslEnabledResponse>().Result;
+
+                        if (!response.Success)
+                        {
+                            //Something went wrong log the response
+                            Log.Error(String.Format("Something went wrong because of {1}", response.Messages.ToString()));
+                            return null;
+                        }
+                        else
+                        {
+                            return response;
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Log.Error(String.Format("Something went wrong getting the SSL response back. The url that was used is {0}. The json that was used is {1}. The raw string value is {1}", request.RequestUri.ToString(), "", stringVersion));
+                        return null;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(String.Format("Failed to get SSL status for zoneId {0}", zoneId), e);
+                throw e;
+            }
+        }
+
+        /// <summary>
         /// Call the cloudflare api to get a list of zones associated with this api key / account email combo. If you pass in a name (domain name), it will return 
         /// that zone.
         /// </summary>

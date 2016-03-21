@@ -29,7 +29,8 @@ angular.module('umbraco.directives').directive("inputAdder", function () {
 		scope:{
 			collection: '=ngModel',
 			submit: '&onSubmit',
-			submitText: '=submitText'
+			submitText: '=submitText',
+            state: '=state'
 		},
 		templateUrl: "/App_Plugins/UmbracoFlare/backoffice/directiveViews/inputAdder.html",
 		link : link

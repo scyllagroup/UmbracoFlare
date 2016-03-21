@@ -36,15 +36,19 @@ Multiple files can added for purging together. </p>
                     </div>
                     <br/>
                     <br />
-                    <button class="btn btn-success -float-right" ng-disabled='!config.CredentialsAreValid' ng-click="purgeStaticFiles(selectedFiles)">Purge Static Files</button>
+                    <div class="button-container">
+                        <div class="icon-check umb-button__success status-indicator" ng-class="{'-hidden': state !== 'purge-static-success'}"></div>
+                        <div class="umb-button__progress status-indicator" ng-class="{'-hidden': state !== 'purge-static-busy'}"></div>
+                        <button class="btn btn-success -float-right" ng-disabled='!config.CredentialsAreValid' ng-click="purgeStaticFiles(selectedFiles)">Purge Static Files</button>
+                    </div>
                 </div>
                 <div class="manual-purge-option">
                     <form ng-disabled='!config.CredentialsAreValid' name="listUrls">
                         <h3>Purge By Url</h3>
                         <p>URLs must be relative and begin with a / and should not include
-the domain. Your current domain will be added by the system. </p>
+the domain. You will have an opportunity to choose domains.</p>
                         <span>Example: /products/umbracoflare/dashboard.</span>
-                        <input-adder class="input-adder" ng-model="urls" on-submit="purgeUrls(collection)" submit-text="purgeUrlsButtonText"></input-adder>
+                        <input-adder class="input-adder" ng-model="urls" state="state" on-submit="purgeUrls(collection)" submit-text="purgeUrlsButtonText"></input-adder>
                     </form>
                 </div>
             </div>
@@ -52,3 +56,38 @@ the domain. Your current domain will be added by the system. </p>
         
     </div>
 </div>
+
+<div
+        bn-modals
+        ng-show="subview"
+        class="m-modals umbracoflare"
+        ng-switch="subview">
+
+        <!-- BEGIN: are you sure. -->
+        <div
+            ng-switch-when="confirmModal"
+            ng-controller="ConfirmModalController"
+            class="umbracoflare-modal">
+
+            <span class="close" ng-click="close()"><i class="fa fa-times fa-lg"></i></span>
+            <h2>Purge Entire Site?</h2>
+
+            <span>Are you sure you want to purge the entire site? The server might take a performance hit while Cloudflare rebuilds your cache.</span> <br/>
+            <br />
+            <div class="pull-right">
+                <a href class="btn btn-link"  ng-click="close()">
+                    Cancel
+                </a>
+            </div>
+            <div >
+                <a href class="btn btn-success" style="color:white;" ng-click="yes()">
+                    Yes, purge it.
+                </a>
+            </div>
+
+        </div>
+        <!-- END: Are you sure Modal. -->
+
+    </div>
+    <!-- END: Modals Layout. -->
+

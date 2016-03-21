@@ -19,6 +19,7 @@ namespace UmbracoFlare.Manager
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private CloudflareConfiguration _config = CloudflareConfiguration.Instance;
         private CloudflareApiController _api;
+        private IEnumerable<Zone> _zonesCache = null;
 
         public static CloudflareManager Instance
         {
@@ -85,13 +86,10 @@ namespace UmbracoFlare.Manager
             //If the setting is turned off, then don't do anything.
             if (!CloudflareConfiguration.Instance.PurgeCacheOn) return new List<StatusWithMessage>(){new StatusWithMessage(false, CloudflareMessages.CLOULDFLARE_DISABLED)};
 
-            urls = urls.Select(url =>
-            {
-                return UrlHelper.MakeFullUrlWithDomain(url);
-            });
+            urls = UmbracoFlareDomainManager.Instance.FilterToAllowedDomains(urls);
 
             //Separate all of these into individual groups where the domain is the same that way we save some cloudflare requests.
-            IEnumerable<IGrouping<string, string>> groupings = urls.GroupBy(url => UrlHelper.GetDomainWithScheme(url));
+            IEnumerable<IGrouping<string, string>> groupings = urls.GroupBy(url => UrlHelper.GetDomainFromUrl(url,true));
 
             List<StatusWithMessage> results = new List<StatusWithMessage>();
 
@@ -100,10 +98,10 @@ namespace UmbracoFlare.Manager
             {
 
                 //get the domain without the scheme or port.
-                Uri domain = new Uri(domainUrlGroup.Key);
+                Uri domain = new UriBuilder(domainUrlGroup.Key).Uri;
 
                 //Get the zone for the current website as configured by the "zoneUrl" config setting in the web.config.
-                Zone websiteZone = GetZone(domain.Host);
+                Zone websiteZone = GetZone(domain.DnsSafeHost);
 
                 if (websiteZone == null)
                 {
@@ -121,10 +119,10 @@ namespace UmbracoFlare.Manager
                 }
                 else
                 {
-                    foreach (string url in urls)
+                    foreach (string url in domainUrlGroup)
                     {
                         //We need to  add x number of statuswithmessages that are true where x is the number urls
-                        results.Add(new StatusWithMessage(true, ""));
+                        results.Add(new StatusWithMessage(true, String.Format("Purged for url {0}", url)));
                     }
                 }
             }
@@ -140,7 +138,10 @@ namespace UmbracoFlare.Manager
         /// <returns>The retreived zone</returns>
         public Zone GetZone(string url = null)
         {
-            List<Zone> zones = this._api.ListZones(url);
+            IEnumerable<Zone> zones = UmbracoFlareDomainManager.Instance.AllowedZones.Where(x => url.Contains(x.Name));
+
+            //List<Zone> zones = this._api.ListZones(url);
+
             if(zones == null || !zones.Any())
             {
                 Log.Error(String.Format("Could not retrieve the zone from cloudflare with the domain(url) of {0}", url));
@@ -148,6 +149,23 @@ namespace UmbracoFlare.Manager
             }
 
             return zones.First();
+        }
+
+
+        public bool IsSSLEnabledOnCloudflare(string zoneId)
+        {
+            SslEnabledResponse sslResponse = this._api.GetSSLStatus(zoneId);
+
+            return sslResponse.Result.Value != "off";
+        }
+
+        public IEnumerable<Zone> ListZones()
+        {
+            if(_zonesCache == null)
+            {
+                _zonesCache = this._api.ListZones();
+            }
+            return _zonesCache;
         }
 
         
@@ -165,6 +183,8 @@ namespace UmbracoFlare.Manager
 
             return sb.ToString();
         }
+
+        
 
     }
 }

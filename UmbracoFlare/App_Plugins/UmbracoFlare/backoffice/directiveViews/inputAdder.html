@@ -7,7 +7,11 @@
         <input type="text" disabled value="{{item}}" /><button class="btn btn-danger" ng-click="remove(item)">Remove</button>
     </div>
     <br/>
-    <button class="btn btn-success -float-right" ng-disabled="collection == null || collection.length == 0" ng-click="submit({collection:collection})">{{submitText}}</button>
+    <div class="button-container">
+        <div class="icon-check umb-button__success status-indicator-purge-url" ng-class="{'-hidden': state !== 'purge-urls-success'}"></div>
+        <div class="umb-button__progress status-indicator-purge-url" style="top:0px; left:65%;" ng-class="{'-hidden': state !== 'purge-urls-busy'}"></div>
+        <button class="btn btn-success -float-right" ng-disabled="collection == null || collection.length == 0" ng-click="submit({collection:collection})">{{submitText}}</button>
+    </div>
 </div>
 
 

@@ -1,13 +1,15 @@
 ﻿angular.module("umbraco").controller("Cloudflare.Dashboard.Controller",
-	function ($scope, $timeout, cloudflareResource, notificationsService, navigationService, appState, eventsService) {
+	function ($scope, $timeout, cloudflareResource, notificationsService, navigationService, appState, eventsService, dialogService, modals) {
 
 	    $scope.oldConfig = null; //A holder to save the config in before updates, that way if the updates fail, we have a copy to revert back to.
 	    $scope.skipConfigUpdate = true; //We have a watch on $scope.config. Don't update it when we get the config from the server for the first time.
 	    $scope.uiConfig = {};
 
+	    
+
+	    $scope.state = '';
 
 	    //Get the configuration status of cloudflare
-
 	    cloudflareResource.getConfigurationStatus().success(function (config) {
 	        $scope.config = config;
 	        $scope.oldConfig = angular.copy(config); //Save a copy so we have somethint to revert back to if the configuration update fails.
@@ -21,6 +23,10 @@
 	            $scope.skipConfigUpdate = false; //Any changes to $scope.config from here should be updated on the server.
 	        }, 0);
 	    });
+
+	    $scope.openModal = function (type) {
+	        return modals.open(type)
+	    }
 
 
 	    $scope.GoToCredentials = function () {
@@ -42,6 +48,7 @@
 	        //Toggle the tree visibility
 	        appState.setGlobalState("showNavigation", !currentNavigationState);
 	    }
+
 
 	    //The eventService allows us to easily listen for any events that the Umbraco applciation fires
 	    //Let's listen for globalState changes...
@@ -67,18 +74,37 @@
 	    $scope.selectedFiles = [];
 
 	    $scope.purgeStaticFiles = function (selectedFiles) {
-	        cloudflareResource.purgeStaticFiles(selectedFiles).success(function (statusWithMessage) {
-	            if(statusWithMessage.Success){
-	                notificationsService.success(statusWithMessage.Message);
-	            } else {
-	                notificationsService.error(statusWithMessage.Message, "");
-	            }
-	        }).error(function (e) {
-	            notificationsService.error("Sorry, we could not purge the cache for the selected static files.", "");
-	        });
+	        openDomainDialog(function (domains) {
+	            $scope.state = 'purge-static-busy';
+	            cloudflareResource.purgeStaticFiles(selectedFiles, domains).success(function (statusWithMessage) {
+	                if (statusWithMessage.Success) {
+	                    $scope.state = "purge-static-success";
+	                    notificationsService.success(statusWithMessage.Message);
+	                } else {
+	                    $scope.state = "purge-static-error";
+	                    notificationsService.error(statusWithMessage.Message, "");
+	                }
+
+	                refreshStateAfterTime();
+
+	            }).error(function (e) {
+	                notificationsService.error("Sorry, we could not purge the cache for the selected static files.", "");
+
+	                $scope.state = "purge-static-error";
+
+	                refreshStateAfterTime();
+	            });
+	        })
 	    };
 
-	    $scope.purgeUrls = function (urls) {
+	    var refreshStateAfterTime = function() {
+	        $timeout(function () {
+	            $scope.state = "";
+	        }, 5000);
+	    }
+
+
+	    $scope.purgeUrls = function (urls, domains) {
 
 	        var noBeginningSlash = false;
 
@@ -98,25 +124,34 @@
 	            return;
 	        }
 
-	        cloudflareResource.purgeCacheForUrls(urls).success(function (statusWithMessage) {
-	            
-	            if (statusWithMessage.Success) {
-	                notificationsService.success(statusWithMessage.Message, "");
-	            } else {
-                    //Build the error
-	                notificationsService.error(statusWithMessage.Message, "");
-	            }
-	        }).error(function (e) {
-	            notificationsService.error("Sorry, we could not purge the cache for the given urls.", "");
-	        });
+	        openDomainDialog(function (domains) {
+	            $scope.state = 'purge-urls-busy';
+	            cloudflareResource.purgeCacheForUrls(urls, domains).success(function (statusWithMessage) {
+
+	                if (statusWithMessage.Success) {
+	                    notificationsService.success(statusWithMessage.Message, "");
+	                    $scope.state = 'purge-urls-success';
+	                } else {
+	                    //Build the error
+	                    notificationsService.error(statusWithMessage.Message, "");
+	                    $scope.state = 'purge-urls-error';
+	                }
+	                refreshStateAfterTime();
+	            }).error(function (e) {
+	                notificationsService.error("Sorry, we could not purge the cache for the given urls.", "");
+	                $scope.state = 'purge-urls-error';
+	                refreshStateAfterTime();
+	            });
+	        })
+	        
 	    };
 
 	    $scope.purgeEverything = function () {
-	        var theyAreSure = window.confirm("Are you sure you want to purge the entire site cache? The website may take a performance hit while the cache is rebuilt.");
 
-	        if (theyAreSure) {
+	        var confirmPromise = $scope.openModal("confirmModal");
+
+	        confirmPromise.then(function () {
 	            cloudflareResource.purgeAll().success(function (statusWithMessage) {
-	                //statusWithMessage = JSON.parse(statusWithMessage);
 	                if (statusWithMessage.Success) {
 	                    notificationsService.success("Purged Cache Successfully!", "");
 	                } else {
@@ -125,10 +160,19 @@
 	            }).error(function (e) {
 	                notificationsService.error("Sorry, we could not purge the cache, please check the error logs for details.", "");
 	            });
-	        }
-	    };
+	        });
+	   }
+
 
 	    $scope.toggleUmbracoNavigation();
 	    
+
+	    var openDomainDialog = function (callback) {
+	        domainDialog = dialogService.open(
+                {
+                    template: "/App_Plugins/UmbracoFlare/backoffice/dashboardViews/domainDialog.html",
+                    callback: callback
+                });
+	    }
 	});
 
