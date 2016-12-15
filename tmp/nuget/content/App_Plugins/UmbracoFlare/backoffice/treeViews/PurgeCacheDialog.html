@@ -1,0 +1,36 @@
+﻿<div ng-controller="Cloudflare.Menu.Controller">
+    <div class="umb-dialog-body form-horizontal">
+        <div class="umb-pane">
+            <p class="abstract" ng-hide="success">
+                Are you sure you want to purge the Cloudflare cache for this node?
+            </p>
+            <umb-pane>
+                <umb-control-group label="Include Descendants?">
+                    <input type="checkbox" ng-model="$parent.$parent.purgeChildren" />
+                </umb-control-group>
+            </umb-pane>
+            <div class="alert alert-error" ng-show="error">
+                <h4>{{errorMsg}}</h4>
+            </div>
+
+            <div class="umb-loader-wrapper" ng-show="busy">
+                <div class="umb-loader"></div>
+            </div>
+
+            <div class="alert alert-success" ng-show="success">
+                You have successfully cleared the cache for this node!
+                <button class="btn btn-primary" ng-click="nav.hideDialog()">Ok</button>
+            </div>
+
+            
+    </div>
+
+    <div class="umb-dialog-footer btn-toolbar umb-btn-toolbar" ng-hide="success">
+        <a class="btn btn-link" ng-click="nav.hideDialog()" ng-if="!busy">
+            <localize key="general_cancel">Cancel</localize>
+        </a>
+        <button class="btn btn-primary" ng-click="purge()" ng-disabled="busy">
+            Purge Cache
+        </button>
+    </div>
+</div>

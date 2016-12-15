@@ -63,6 +63,8 @@
       </div>
 
       <umb-file-dropzone
+         ng-if="acceptedMediatypes.length > 0"
+         accepted-mediatypes="acceptedMediatypes"
          parent-id="{{currentFolder.id}}"
          files-uploaded="onUploadComplete"
          files-queued="onFilesQueue"
@@ -80,7 +82,8 @@
          item-max-width="150"
          item-max-height="150"
          item-min-width="100"
-         item-min-height="100">
+         item-min-height="100"
+         only-images={{onlyImages}}>
       </umb-media-grid>
 
    </div>

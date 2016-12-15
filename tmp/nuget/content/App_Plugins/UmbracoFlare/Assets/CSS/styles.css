@@ -1,0 +1,398 @@
+﻿.umbracoflare .umbracoflareContainer {
+	max-width: 840px;
+	margin: auto;
+	padding: 0 20px;
+}
+
+.umbracoflare .-color-red {
+	color: #e92051;
+}
+
+.umbracoflare a {
+	color: #e92051;
+}
+
+.umbracoflare .title h1 {
+}
+
+.umbracoflare .title h2 {
+}
+
+.umbracoflare .title a {
+}
+
+.umbracoflare .licenseContainer {
+	margin-top: 1rem;
+}
+
+.umbracoflare .license {
+	width: 100%;
+	overflow-y: scroll;
+	box-sizing: border-box;
+	height: 420px;
+}
+
+
+
+
+/*
+		Borrowed from Bootstrap
+	*/
+
+.umbracoflare .bs-callout {
+	padding: 0 20px 20px 20px;
+	margin: 20px 0;
+	border: 1px solid #eee;
+	border-left-width: 5px;
+	border-radius: 3px;
+}
+
+.umbracoflare .bs-callout-danger {
+	border-left-color: #ce4844;
+}
+
+	.umbracoflare .bs-callout-danger h4 {
+		color: #ce4844;
+	}
+
+.umbracoflare .bs-callout-success {
+	border-left-color: #00FF58;
+}
+
+	.umbracoflare .bs-callout-success h4 {
+		color: #00FF58;
+	}
+
+
+    .umbracoflare .bs-callout ul{
+        list-style:none;
+        margin: 0;
+    }
+
+    .umbracoflare .bs-callout h4{
+        margin-top:0;
+    }
+
+.umbracoflare hr{
+    margin:5px 0;
+    border: 1px solid #CCCCCC;
+    
+}
+
+.umbracoflare .-red{
+    color: #ce4844;
+}
+
+.umbracoflare .-black{
+    color: black;
+}
+
+.umbracoflare h1{
+    font-weight:bold;
+}
+
+.umbracoflare .-green{
+    color: #5cb85c;
+}
+
+.umbracoflare .button{
+    border:none;
+    padding: 5px 50px;
+}
+
+.umbracoflare .button.-grey{
+    background:#CCCCCC;
+}
+
+.umbracoflare .button.-red{
+    color:white;
+    background:#ce4844 ;
+}
+
+.umbracoflare .button.-light-green{
+    background:#D9FFD9;
+}
+
+.umbracoflare .-grey-out{
+    opacity:.5;
+}
+
+.umbracoflare .manual-purge-container{
+    margin:40px 0;
+}
+
+.umbracoflare .manual-purge-option{
+    display:inline-block;
+    width:49%;
+    vertical-align:top;
+    box-sizing:border-box;
+    padding:10px 50px;
+}
+
+.umbracoflare .manual-purge-option h3{
+    text-align:center;
+}
+
+.umbracoflare .-full-width{
+    width:100%;
+}
+
+.umbracoflare .-full-height{
+    height:100%;
+}
+
+.umbracoflare .-full-height-width{
+    height:100%;
+    width:100%;
+}
+
+.umbracoflare .-no-margin{
+    margin:0;
+}
+
+.umbracoflare .file-system-picker-control{
+    text-align:center;
+}
+
+.umbracoflare .file-system-picker-control .list-icons li{
+    padding: 0;
+    max-width: unset;
+}
+
+.umbracoflare input{
+        border: 1px solid black;
+    border-radius: 0;
+}
+
+.umbracoflare.config-tab .config-group{
+    margin:20px 0;
+}
+
+.umbracoflare.config-tab .header-container h2{
+    width: 49%;
+    display: inline-block;
+}
+
+.umbracoflare.config-tab .header-container .collapse-show{
+    width:49%;
+    display:inline-block;
+    text-align:right;
+}
+
+.umbracoflare .-text-left{
+    text-align:left;
+}
+
+.umbracoflare .collapse-show-text{
+    padding-right:15px;
+}
+
+.umbracoflare input.input-adder-input{
+    width:57%;
+}
+
+.umbracoflare .-background-red{
+    background: #ce4844;
+}
+
+.umbracoflare .-background-green{
+    background: #5cb85c;
+}
+
+.umbracoflare .-background-bright-green{
+    background: #53a93f;
+}
+
+.umbracoflare .-bright-green{
+    color: #53a93f;
+}
+
+.umbracoflare .clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.umbracoflare .clearfix {
+    display: inline-block;
+}
+
+.umbracoflare .toggle-switch{
+    height:20px;
+    width:150px;
+    border: 1px solid black;
+    display:inline-block;
+}
+
+.umbracoflare .toggle-container{
+    margin: 50px 0;
+}
+
+.umbracoflare .toggle-container > span{
+    display: inline-block;
+    float: left;
+    padding-right:50px;
+}
+
+.umbracoflare .toggle-switch > div{
+    width:50%;
+    height:100%;
+    position:relative;
+}
+
+
+.umbracoflare .toggle-button{
+    cursor:pointer;
+}
+
+.umbracoflare .toggle-label{
+    position:absolute;
+    left: 0;
+    right: 0;
+    top: -25px;
+    text-align:center;
+
+}
+
+.umbracoflare .-float-left{
+    float:left;
+}
+
+.umbracoflare .-float-right{
+    float:right;
+}
+.m-modals{
+    position:absolute;
+    top:0;
+    right:0;
+    left:0;
+    bottom:0;
+    background:rgba(0,0,0,.3);
+    z-index:9000;
+}
+
+.umbracoflare .umbracoflare-modal{
+    z-index:9999;
+    position:fixed;
+    top: 10%;
+    left: 25%;
+    width: 560px;
+    background-color:#fff;
+    border:1px solid rgba(0,0,0,0.3);
+    outline:0;
+    box-shadow: 0 3px 7px rgba(0,0,0,.3);
+    padding: 30px;
+}
+
+.umbracoflare .status-indicator{
+    top: 15px;
+    left: 60%;
+}
+
+.umbracoflare .status-indicator-purge-url{
+    top: 5px;
+    left: 70%;
+}
+
+.umbracoflare .button-container{
+    position:relative;
+}
+
+.umbracoflare .umbracoflare-modal .close{
+    cursor:pointer;
+}
+
+.umbracoflare .cc-logo-container{
+    display:inline-block;
+    float:left;
+    width:30%;
+    padding-top:20px;
+}
+
+.umbracoflare .share-alike-container{
+    float:left;
+    padding-left:15px;
+}
+
+.umbracoflare .license-header{
+    margin-bottom:30px;
+}
+
+.umbracoflare .free-to-container{
+    padding-top:0;
+}
+
+.umbracoflare .not-free-to-container{
+    padding-top:0;
+}
+
+.umbracoflare .license-icon{
+    width:30px;
+    height:30px;
+    margin-right:10px;
+}
+
+.umbracoflare .support-container{
+    text-align:center;
+
+}
+
+.umbracoflare .support-container img{
+    margin-bottom:5px;
+}
+
+.umbracoflare .support-container li{
+    text-align:left;
+}
+
+.umbracoflare .online-support-container{
+    display:inline-block;
+    float:left;
+}
+
+.umbracoflare .contact-container{
+    float:left;
+    margin-left:50px;
+}
+
+.umbracoflare h2{
+    font-size:25px;
+}
+
+.umbracoflare .umbraco-help{
+    cursor:pointer;
+}
+
+    .purge-everything {
+        margin-top: 40px;
+    }
+
+    .config-group {
+        margin: 10px 0;
+    }
+
+    .config-on {
+        color: white;
+        background: green;
+    }
+
+    .config-off {
+        color: white;
+        background: red;
+    }
+
+    .cloudflare-config {
+        height: 50%;
+        margin: 0 0;
+    }
+
+    i.active {
+        color: #53a93f;
+    }
+
+    i.inactive {
+        color: #d9534f;
+    }
