@@ -161,7 +161,7 @@ namespace UmbracoFlare.Manager
 
         public IEnumerable<Zone> ListZones()
         {
-            if(_zonesCache == null)
+            if(_zonesCache == null || !_zonesCache.Any())
             {
                 _zonesCache = this._api.ListZones();
             }
