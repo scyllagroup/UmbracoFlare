@@ -53,7 +53,7 @@ namespace UmbracoFlare.Manager
         {
             get
             {
-                if(_allowedDomains == null)
+                if(_allowedDomains == null || !_allowedDomains.Any())
                 {
                     _allowedDomains = GetAllowedZonesAndDomains().Value;
                 }
@@ -182,7 +182,6 @@ namespace UmbracoFlare.Manager
             //Get the list of domains from cloudflare.
             IEnumerable<Zone> allZones = _cloudflareManager.ListZones();
 
-            //Get every domain registered with umbraco, no wild card support yet. Anyone up for that?
             IEnumerable<string> domainsInUmbraco = ApplicationContext.Current.Services.DomainService.GetAll(false).Select(x => new UriBuilder(x.DomainName).Uri.DnsSafeHost);
 
             foreach(Zone zone in allZones)
