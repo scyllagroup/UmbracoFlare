@@ -122,7 +122,9 @@ namespace UmbracoFlare.Manager
         {
             List<string> urls = new List<string>();
 
-            urls.Add(UmbracoContext.Current.RoutingContext.UrlProvider.GetUrl(content.Id, true));
+            string url = UmbracoContext.Current.RoutingContext.UrlProvider.GetUrl(content.Id, true);
+
+            urls.AddRange(UrlHelper.MakeFullUrlWithDomain(url, RecursivelyGetParentsDomains(new List<string>(), content)));
             urls.AddRange(UmbracoContext.Current.RoutingContext.UrlProvider.GetOtherUrls(content.Id));
 
             if(includeDescendants)
