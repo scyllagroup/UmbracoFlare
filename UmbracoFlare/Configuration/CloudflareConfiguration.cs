@@ -47,7 +47,7 @@ namespace UmbracoFlare.Configuration
         {
             get
             {
-                return this._doc.Root.Element("apiKey").Value;
+                return this._doc==null ? String.Empty: this._doc.Root.Element("apiKey").Value;
             }
             set
             {
@@ -61,7 +61,7 @@ namespace UmbracoFlare.Configuration
         {
             get
             {
-                return this._doc.Root.Element("accountEmail").Value;
+                return this._doc == null ? String.Empty : this._doc.Root.Element("accountEmail").Value;
             }
             set
             {
@@ -75,8 +75,11 @@ namespace UmbracoFlare.Configuration
         {
             get
             {
-                bool purgeCacheOn;
-                bool.TryParse(this._doc.Root.Element("purgeCacheOn").Value, out purgeCacheOn);
+                bool purgeCacheOn = false;
+                if(this._doc!=null)
+                {
+                    bool.TryParse(this._doc.Root.Element("purgeCacheOn").Value, out purgeCacheOn);
+                }
                 return purgeCacheOn;
             }
 
