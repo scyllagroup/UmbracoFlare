@@ -38,9 +38,6 @@ namespace UmbracoFlare.ApiControllers
             //Get the ApiKey and AccountEmail from the web.config settings.
             _apiKey = CloudflareConfiguration.Instance.ApiKey;
             _accountEmail = CloudflareConfiguration.Instance.AccountEmail;
-
-            // UmbracoFlare no longer supports Tls 1.0 and 1.1 -> upgrade to 1.2
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
 
