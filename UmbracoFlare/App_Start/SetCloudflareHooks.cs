@@ -1,4 +1,4 @@
-﻿using UmbracoFlare.Configuration;
+using UmbracoFlare.Configuration;
 using UmbracoFlare.Manager;
 using UmbracoFlare.Models;
 using System;
@@ -33,12 +33,13 @@ namespace UmbracoFlare.App_Start
         {
             ContentService.Published += PurgeCloudflareCache;
             ContentService.Published += UpdateContentIdToUrlCache;
+            FileService.SavedScript += PurgeCloudflareCacheForScripts;
+            FileService.SavedStylesheet += PurgeCloudflareCacheForStylesheets;
 
             MediaService.Saved += PurgeCloudflareCacheForMedia;
             DataTypeService.Saved += RefreshImageCropsCache;
             TreeControllerBase.MenuRendering += AddPurgeCacheForContentMenu;
         }
-
 
         protected void UpdateContentIdToUrlCache(IPublishingStrategy strategy, PublishEventArgs<IContent> e)
         {
@@ -94,6 +95,50 @@ namespace UmbracoFlare.App_Start
                 //There were some freshly saved Image cropper data types so refresh the image crop cache.
                 //We can do that by simply getting the crops
                 ImageCropperManager.Instance.GetAllCrops(true); //true to bypass the cache & refresh it.
+            }
+        }
+
+        private void PurgeCloudflareCacheForScripts(IFileService sender, SaveEventArgs<Script> e)
+        {
+            var files = e.SavedEntities.Select(se => se as File);
+            PurgeCloudflareCacheForFiles(files, e);
+        }
+        private void PurgeCloudflareCacheForStylesheets(IFileService sender, SaveEventArgs<Stylesheet> e)
+        {
+            var files = e.SavedEntities.Select(se => se as File);
+            PurgeCloudflareCacheForFiles(files, e);
+        }
+        private void PurgeCloudflareCacheForFiles<T>(IEnumerable<File> files, SaveEventArgs<T> e)
+        {
+            //If we have the cache buster turned off then just return.
+            if (!CloudflareConfiguration.Instance.PurgeCacheOn) { return; }
+
+            List<string> urls = new List<string>();
+            UmbracoHelper uh = new UmbracoHelper(UmbracoContext.Current);
+            //GetUmbracoDomains
+            IEnumerable<string> domains = UmbracoFlareDomainManager.Instance.AllowedDomains;
+
+            foreach (var file in files)
+            {
+                if (file.IsNewEntity())
+                {
+                    //If its new we don't want to purge the cache as this causes slow upload times.
+                    continue;
+                }
+
+                urls.Add(file.VirtualPath);
+            }
+
+
+            List<StatusWithMessage> results = CloudflareManager.Instance.PurgePages(UrlHelper.MakeFullUrlWithDomain(urls, domains, true));
+
+            if (results.Any() && results.Where(x => !x.Success).Any())
+            {
+                e.Messages.Add(new EventMessage("Cloudflare Caching", "We could not purge the Cloudflare cache. \n \n" + CloudflareManager.PrintResultsSummary(results), EventMessageType.Warning));
+            }
+            else if (results.Any())
+            {
+                e.Messages.Add(new EventMessage("Cloudflare Caching", "Successfully purged the cloudflare cache.", EventMessageType.Success));
             }
         }
 
