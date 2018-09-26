@@ -131,6 +131,7 @@
     <Compile Include="ApiControllers\CloudflareUmbracoApiController.cs" />
     <Compile Include="App_Start\SetCloudflareHooks.cs" />
     <Compile Include="App_Start\UmbracoFlareApplication.cs" />
+    <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Configuration\CloudflareConfiguration.cs" />
     <Compile Include="Configuration\CloudflareMessages.cs" />
     <Compile Include="Constants\Constants.cs" />
