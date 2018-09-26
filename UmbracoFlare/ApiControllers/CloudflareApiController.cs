@@ -35,6 +35,8 @@ namespace UmbracoFlare.ApiControllers
         public CloudflareApiController()
             : base()
         {
+            // CloudFlare only works with TLS 1.2 now
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
             //Get the ApiKey and AccountEmail from the web.config settings.
             _apiKey = CloudflareConfiguration.Instance.ApiKey;
             _accountEmail = CloudflareConfiguration.Instance.AccountEmail;
