@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>UmbracoFlare</id>
-    <version>1.1.5</version>
+    <version>1.1.6</version>
     <title>UmbracoFlare</title>
     <authors>The Scylla Group, Inc.</authors>
     <owners>The Scylla Group, Inc.</owners>
@@ -10,7 +10,7 @@
     <licenseUrl>http://creativecommons.org/licenses/by-nc-sa/4.0/</licenseUrl>
     <projectUrl>https://github.com/scyllagroup/UmbracoFlare</projectUrl>
     <description>This project aims to provide a basic level of service integration between Cloudflare and the open-source ASP.NET CMS Umbraco.</description>
-    <releaseNotes>Fixes previous release with incorrect build settings.</releaseNotes>
+    <releaseNotes>Adds auto purge for css and javscript files saved from the backoffice.</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <dependencies />
   </metadata>
