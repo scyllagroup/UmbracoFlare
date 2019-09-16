@@ -14,6 +14,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Umbraco.Web.Mvc;
 using UmbracoFlare.Models;
+using UmbracoFlare.Services;
 
 namespace UmbracoFlare.ApiControllers
 {
@@ -22,7 +23,7 @@ namespace UmbracoFlare.ApiControllers
     /// </summary>
     [PluginController("UmbracoFlare")]
     ///umbraco/backoffice/UmbracoFlare/CloudflareApi/
-    public class CloudflareApiController : UmbracoAuthorizedApiController
+    public class CloudflareApiController : UmbracoAuthorizedApiController, ICloudflareService
     {
         //The API Endpoint.
         public const string CLOUDFLARE_API_BASE_URL = "https://api.cloudflare.com/client/v4/";
@@ -32,12 +33,12 @@ namespace UmbracoFlare.ApiControllers
         private static string _apiKey;
         private static string _accountEmail;
 
-        public CloudflareApiController()
+        public CloudflareApiController(ICloudflareConfiguration cloudflareConfiguration)
             : base()
         {
             //Get the ApiKey and AccountEmail from the web.config settings.
-            _apiKey = CloudflareConfiguration.Instance.ApiKey;
-            _accountEmail = CloudflareConfiguration.Instance.AccountEmail;
+            _apiKey = cloudflareConfiguration.ApiKey;
+            _accountEmail = cloudflareConfiguration.AccountEmail;
         }
 
 
@@ -117,7 +118,7 @@ namespace UmbracoFlare.ApiControllers
                         if (!response.Success)
                         {
                             //Something went wrong log the response
-                            Log.Error(String.Format("Something went wrong because of {1}", response.Messages.ToString()));
+                            Log.Error(String.Format("Something went wrong because of {0}", response.Messages.ToString()));
                             return null;
                         }
                         else
@@ -127,7 +128,7 @@ namespace UmbracoFlare.ApiControllers
                     }
                     catch(Exception e)
                     {
-                        Log.Error(String.Format("Something went wrong getting the SSL response back. The url that was used is {0}. The json that was used is {1}. The raw string value is {1}", request.RequestUri.ToString(), "", stringVersion));
+                        Log.Error(String.Format("Something went wrong getting the SSL response back. The url that was used is {0}. The json that was used is {1}. The raw string value is {1}", request.RequestUri.ToString(), "", stringVersion), e);
                         return null;
                     }
                 }
@@ -260,13 +261,13 @@ namespace UmbracoFlare.ApiControllers
                         if (!response.Success)
                         {
                             //Something went wrong log the response
-                            Log.Error(String.Format("Something went wrong because of {1}", response.Messages.ToString()));
+                            Log.Error(String.Format("Something went wrong because of {0}", response.Messages.ToString()));
                             return false;
                         }
                     }
                     catch(Exception e)
                     {
-                        Log.Error(String.Format("Something went wrong getting the purge cache response back. The url that was used is {0}. The json that was used is {1}. The raw string value is {1}", request.RequestUri.ToString(), json, stringVersion));
+                        Log.Error(String.Format("Something went wrong getting the purge cache response back. The url that was used is {0}. The json that was used is {1}. The raw string value is {1}", request.RequestUri.ToString(), json, stringVersion), e);
                         return false;
                     }
                     

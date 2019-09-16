@@ -5,37 +5,36 @@ using System.Text;
 using System.Threading.Tasks;
 using Umbraco.Core;
 using Umbraco.Core.Models;
+using Umbraco.Core.Services;
 using Umbraco.Web;
+using Umbraco.Web.Routing;
 using UmbracoFlare.Helpers;
 using UmbracoFlare.Models;
+using UmbracoFlare.Services;
 
 namespace UmbracoFlare.Manager
 {
-    public class UmbracoFlareDomainManager
+    public class UmbracoFlareDomainManager : IUmbracoFlareDomainManager
     {
-        private static UmbracoFlareDomainManager _instance = null;
 
-        private CloudflareManager _cloudflareManager;
-
+        private readonly ICloudflareService cloudflareService;
+        private readonly IContentService contentService;
+        private readonly IDomainService domainService;
+        private readonly UmbracoContext umbracoContext;
         private IEnumerable<Zone> _allowedZones;
         private IEnumerable<string> _allowedDomains;
 
-        private UmbracoFlareDomainManager()
+        private UmbracoFlareDomainManager(
+                ICloudflareService cloudflareService, 
+                IContentService contentService, 
+                IDomainService domainService, 
+                UmbracoContext umbracoContext
+            )
         {
-            _cloudflareManager = CloudflareManager.Instance;
-        }
-
-        public static UmbracoFlareDomainManager Instance 
-        {
-            get
-            {
-                if(_instance == null)
-                {
-                    _instance = new UmbracoFlareDomainManager();
-                }
-
-                return _instance;
-            }
+            this.cloudflareService = cloudflareService;
+            this.contentService = contentService;
+            this.domainService = domainService;
+            this.umbracoContext = umbracoContext;
         }
 
         public IEnumerable<Zone> AllowedZones {
@@ -62,14 +61,6 @@ namespace UmbracoFlare.Manager
         }
 
 
-        /// <summary>
-        /// Gets the domains from each cloudflare zone.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<string> GetDomainsFromCloudflareZones()
-        {
-            return this.AllowedZones.Select(x => x.Name);
-        }
 
         /// <summary>
         /// This will take a list of domains and make sure that they are either equal to or a subdomain of the allowed domains in cloudflare.
@@ -100,7 +91,7 @@ namespace UmbracoFlare.Manager
 
         public List<string> GetUrlsForNode(int contentId, bool includeDescendants = false)
         {
-            IContent content = ApplicationContext.Current.Services.ContentService.GetById(contentId);
+            IContent content = contentService.GetById(contentId);
             
             if(content == null)
             {
@@ -122,24 +113,35 @@ namespace UmbracoFlare.Manager
         {
             List<string> urls = new List<string>();
 
-            string url = UmbracoContext.Current.RoutingContext.UrlProvider.GetUrl(content.Id, true);
+            string url = GetUrl(content);
 
             urls.AddRange(UrlHelper.MakeFullUrlWithDomain(url, RecursivelyGetParentsDomains(new List<string>(), content)));
-            urls.AddRange(UmbracoContext.Current.RoutingContext.UrlProvider.GetOtherUrls(content.Id));
+            urls.AddRange(GetotherUrls(content));
 
-            if(includeDescendants)
+            if (includeDescendants)
             {
-                foreach(IContent desc in content.Descendants())
+                var numDescendants = contentService.CountDescendants(content.Id);
+                long outParam;
+                foreach (IContent desc in contentService.GetPagedDescendants(content.Id, 0, numDescendants, out outParam))
                 {
-                    urls.Add(UmbracoContext.Current.RoutingContext.UrlProvider.GetUrl(desc.Id, true));
-                    urls.AddRange(UmbracoContext.Current.RoutingContext.UrlProvider.GetOtherUrls(desc.Id));
+                    urls.Add(GetUrl(desc));
+                    urls.AddRange(GetotherUrls(desc));
                 }
             }
 
             return urls;
         }
 
-        
+        private string GetUrl(IContent content)
+        {
+            return umbracoContext.UrlProvider.GetUrl(content.Id);
+        }
+
+        private IEnumerable<string> GetotherUrls(IContent content)
+        {
+            return umbracoContext.UrlProvider.GetOtherUrls(content.Id).Where(x => x.IsUrl).Select(x => x.Text);
+        }
+
 
         private List<string> RecursivelyGetParentsDomains(List<string> domains, IContent content)
         {
@@ -149,9 +151,9 @@ namespace UmbracoFlare.Manager
                 return domains;
             }
 
-            domains.AddRange(ApplicationContext.Current.Services.DomainService.GetAssignedDomains(content.Id, false).Select(x => x.DomainName));
+            domains.AddRange(domainService.GetAssignedDomains(content.Id, false).Select(x => x.DomainName));
 
-            domains = RecursivelyGetParentsDomains(domains, content.Parent());
+            domains = RecursivelyGetParentsDomains(domains, contentService.GetParent(content));
 
             return domains;
         }
@@ -165,10 +167,20 @@ namespace UmbracoFlare.Manager
 
             foreach(IContent descendant in descendants)
             {
-                domains.AddRange(ApplicationContext.Current.Services.DomainService.GetAssignedDomains(descendant.Id, false).Select(x => x.DomainName));
+                domains.AddRange(domainService.GetAssignedDomains(descendant.Id, false).Select(x => x.DomainName));
             }
 
             return domains;
+        }
+
+        private IEnumerable<Zone> _zonesCache = null;
+        public IEnumerable<Zone> ListZones()
+        {
+            if (_zonesCache == null || !_zonesCache.Any())
+            {
+                _zonesCache = this.cloudflareService.ListZones();
+            }
+            return _zonesCache;
         }
 
         /// <summary>
@@ -182,9 +194,9 @@ namespace UmbracoFlare.Manager
             List<string> allowedDomains = new List<string>();
 
             //Get the list of domains from cloudflare.
-            IEnumerable<Zone> allZones = _cloudflareManager.ListZones();
+            IEnumerable<Zone> allZones = ListZones();
 
-            IEnumerable<string> domainsInUmbraco = ApplicationContext.Current.Services.DomainService.GetAll(false).Select(x => new UriBuilder(x.DomainName).Uri.DnsSafeHost);
+            IEnumerable<string> domainsInUmbraco = domainService.GetAll(false).Select(x => new UriBuilder(x.DomainName).Uri.DnsSafeHost);
 
             foreach(Zone zone in allZones)
             {
@@ -209,6 +221,10 @@ namespace UmbracoFlare.Manager
         }
 
 
+        public IEnumerable<string> GetDomainsFromCloudflareZones()
+        {
+            return this.AllowedZones.Select(x => x.Name);
+        }
 
     }
 }

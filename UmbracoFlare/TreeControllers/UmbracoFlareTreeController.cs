@@ -10,7 +10,7 @@ using System.Net.Http.Formatting;
 
 namespace UmbracoFlare.Cloudflare.TreeControllers
 {
-    [Umbraco.Web.Trees.Tree("UmbracoFlare", "UmbracoFlare", "UmbracoFlare")]
+    [Umbraco.Web.Trees.Tree("UmbracoFlare", "UmbracoFlare")]
     public class UmbracoFlareTreeController : TreeController
     {
 

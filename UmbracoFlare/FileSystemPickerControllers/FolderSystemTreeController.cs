@@ -11,7 +11,7 @@ using System.Web;
 
 namespace Umbraco.FileSystemPicker.Controllers
 {
-    [Tree("dummy", "fileSystemTree", "File System")]
+    [Tree("dummy", "fileSystemTree")]
     [PluginController("FileSystemPicker")]
     public class FolderSystemTreeController : TreeController
     {

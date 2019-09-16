@@ -5,37 +5,30 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Umbraco.Core.Models;
+using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web;
 
 namespace UmbracoFlare.Manager
 {
-    public class UmbracoUrlWildCardManager
+    public class RuntimeCacheUrlWildCardManager: IUrlWildCardManager
     {
         private Dictionary<int, IEnumerable<string>> _contentIdToUrlCache;
         private const string CACHE_KEY = "UmbracoUrlWildCardManager.ContentIdToUrlCache";
+        private readonly UmbracoHelper helper;
+        private readonly IUmbracoFlareDomainManager domainManager;
 
-        private static UmbracoUrlWildCardManager _instance;
-
-        private UmbracoUrlWildCardManager()
+        public RuntimeCacheUrlWildCardManager(
+                UmbracoHelper helper,
+                IUmbracoFlareDomainManager domainManager
+            )
         {
             _contentIdToUrlCache = HttpRuntime.Cache[CACHE_KEY] as Dictionary<int, IEnumerable<string>>;
-        }
-
-        public static UmbracoUrlWildCardManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new UmbracoUrlWildCardManager();
-                }
-
-                return _instance;
-            }
+            this.helper = helper;
+            this.domainManager = domainManager;
         }
 
 
-        public IEnumerable<string> GetAllUrlsForWildCardUrls(IEnumerable<string> wildCardUrls, UmbracoHelper uh)
+        public IEnumerable<string> GetAllUrlsForWildCardUrls(IEnumerable<string> wildCardUrls)
         {
             List<string> resolvedUrls = new List<string>();
 
@@ -44,7 +37,7 @@ namespace UmbracoFlare.Manager
                 return resolvedUrls;
             }
 
-            IEnumerable<string> allContentUrls = GetAllContentUrls(uh);
+            IEnumerable<string> allContentUrls = GetAllContentUrls();
 
             foreach(string wildCardUrl in wildCardUrls)
             {
@@ -74,9 +67,8 @@ namespace UmbracoFlare.Manager
         /// <summary>
         /// Gets the urls of every content item in the content section and caches the results. Is there a faster way to do this? 
         /// </summary>
-        /// <param name="uh"></param>
         /// <returns></returns>
-        private IEnumerable<string> GetAllContentUrls(UmbracoHelper uh)
+        private IEnumerable<string> GetAllContentUrls()
         {
             if(this._contentIdToUrlCache != null && this._contentIdToUrlCache.Any())
             {
@@ -90,18 +82,18 @@ namespace UmbracoFlare.Manager
             //Id like to use UmbracoContext.Current.ContentCache.GetByRoute() somehow but you cant always guarantee that urls
             //will be in  hierarchical order because of rewriteing, etc.
 
-            IEnumerable<IPublishedContent> roots = uh.TypedContentAtRoot();
+            IEnumerable<IPublishedContent> roots = helper.ContentAtRoot();
             
             foreach(IPublishedContent content in roots)
             {
-                IEnumerable<string> contentUrls = UmbracoFlareDomainManager.Instance.GetUrlsForNode(content.Id, false);
+                IEnumerable<string> contentUrls = domainManager.GetUrlsForNode(content.Id, false);
 
                 cache.Add(content.Id, contentUrls);
                 urls.AddRange(contentUrls);
 
                 foreach(IPublishedContent childContent in content.Descendants())
                 {
-                    IEnumerable<string> childContentUrls = UmbracoFlareDomainManager.Instance.GetUrlsForNode(childContent.Id, false);
+                    IEnumerable<string> childContentUrls = domainManager.GetUrlsForNode(childContent.Id, false);
 
                     cache.Add(childContent.Id, childContentUrls);
                     urls.AddRange(childContentUrls);

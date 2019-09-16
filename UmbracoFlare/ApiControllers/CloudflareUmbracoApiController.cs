@@ -18,6 +18,8 @@ using System.IO;
 using Umbraco.Core.IO;
 using UmbracoFlare.Helpers;
 using Umbraco.Web.Routing;
+using UmbracoFlare.Services;
+using Umbraco.Core.Models.PublishedContent;
 
 namespace UmbracoFlare.ApiControllers
 {
@@ -26,6 +28,16 @@ namespace UmbracoFlare.ApiControllers
     {
         //The Log
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ICloudflareManager cloudflareManager;
+        private readonly ICloudflareService cloudflareService;
+        private readonly IUrlWildCardManager wildCardManager;
+
+        public CloudflareUmbracoApiController(ICloudflareManager cloudflareManager, ICloudflareService cloudflareService, IUrlWildCardManager wildCardManager)
+        {
+            this.cloudflareManager = cloudflareManager;
+            this.cloudflareService = cloudflareService;
+            this.wildCardManager = wildCardManager;
+        }
 
         [HttpPost]
         public StatusWithMessage PurgeCacheForUrls([FromBody]PurgeCacheForUrlsRequestModel model)
@@ -58,11 +70,11 @@ namespace UmbracoFlare.ApiControllers
 
             builtUrls.AddRange(AccountForWildCards(builtUrls));
             
-            List<StatusWithMessage> results = CloudflareManager.Instance.PurgePages(builtUrls);
+            IEnumerable<StatusWithMessage> results = cloudflareManager.PurgePages(builtUrls);
 
             if(results.Any(x => !x.Success))
             {
-                return new StatusWithMessage(false, CloudflareManager.PrintResultsSummary(results));
+                return new StatusWithMessage(false, cloudflareManager.PrintResultsSummary(results));
             }
             else
             {
@@ -108,11 +120,11 @@ namespace UmbracoFlare.ApiControllers
                 }
             }
 
-             results.AddRange(CloudflareManager.Instance.PurgePages(fullUrlsToPurge));
+             results.AddRange(cloudflareManager.PurgePages(fullUrlsToPurge));
 
             if (results.Any(x => !x.Success))
             {
-                return new StatusWithMessage(false, CloudflareManager.PrintResultsSummary(results));
+                return new StatusWithMessage(false, cloudflareManager.PrintResultsSummary(results));
             }
             else
             {
@@ -193,31 +205,30 @@ namespace UmbracoFlare.ApiControllers
         public StatusWithMessage PurgeAll()
         {
             //it doesn't matter what domain we pick bc it will purge everything. 
-            IEnumerable<string> domains = UmbracoFlareDomainManager.Instance.GetDomainsFromCloudflareZones();
+            IEnumerable<string> domains = cloudflareManager.DomainManager.GetDomainsFromCloudflareZones();
 
             List<StatusWithMessage> results = new List<StatusWithMessage>();
 
             foreach(string domain in domains)
             {
-                results.Add(CloudflareManager.Instance.PurgeEverything(domain));
+                results.Add(cloudflareManager.PurgeEverything(domain));
             }
 
-            return new StatusWithMessage() { Success = !results.Any(x => !x.Success), Message = CloudflareManager.PrintResultsSummary(results) };
+            return new StatusWithMessage() { Success = !results.Any(x => !x.Success), Message = cloudflareManager.PrintResultsSummary(results) };
         }
 
 
         [HttpGet]
         public CloudflareConfigModel GetConfig()
         {
-            CloudflareApiController cloudflareApi = new CloudflareApiController();
-            UserDetails ud = cloudflareApi.GetUserDetails();
-
+            UserDetails ud = cloudflareService.GetUserDetails();
+            var config = cloudflareManager.Configuration;
             return new CloudflareConfigModel()
             {
-                PurgeCacheOn = CloudflareConfiguration.Instance.PurgeCacheOn,
+                PurgeCacheOn = config.PurgeCacheOn,
                 //AdditionalUrls = CloudflareConfiguration.Instance.AdditionalZoneUrls,
-                ApiKey = CloudflareConfiguration.Instance.ApiKey,
-                AccountEmail = CloudflareConfiguration.Instance.AccountEmail,
+                ApiKey = config.ApiKey,
+                AccountEmail = config.AccountEmail,
                 CredentialsAreValid = ud != null && ud.Success
             };
         }
@@ -228,13 +239,13 @@ namespace UmbracoFlare.ApiControllers
         {
             if (args.nodeId <= 0) { return new StatusWithMessage(false, "You must provide a node id."); }
 
-            if (!CloudflareConfiguration.Instance.PurgeCacheOn) { return new StatusWithMessage(false, CloudflareMessages.CLOULDFLARE_DISABLED); }
+            if (!cloudflareManager.Configuration.PurgeCacheOn) { return new StatusWithMessage(false, CloudflareMessages.CLOULDFLARE_DISABLED); }
 
             List<string> domains = new List<string>();
 
             List<string> urlsToPurge = new List<string>();
 
-            IPublishedContent content = Umbraco.TypedContent(args.nodeId);
+            IPublishedContent content = Umbraco.Content(args.nodeId);
 
 
             List<string> urls = BuildUrlsToPurge(content, args.purgeChildren);
@@ -256,9 +267,9 @@ namespace UmbracoFlare.ApiControllers
         {
             try
             {
-                CloudflareConfiguration.Instance.PurgeCacheOn = config.PurgeCacheOn;
-                CloudflareConfiguration.Instance.ApiKey = config.ApiKey;
-                CloudflareConfiguration.Instance.AccountEmail = config.AccountEmail;
+                cloudflareManager.Configuration.PurgeCacheOn = config.PurgeCacheOn;
+                cloudflareManager.Configuration.ApiKey = config.ApiKey;
+                cloudflareManager.Configuration.AccountEmail = config.AccountEmail;
 
                 return GetConfig();
             }
@@ -274,7 +285,7 @@ namespace UmbracoFlare.ApiControllers
         [HttpGet]
         public IEnumerable<string> GetAllowedDomains()
         {
-            return UmbracoFlareDomainManager.Instance.AllowedDomains;
+            return cloudflareManager.DomainManager.AllowedDomains;
         }
 
 
@@ -287,7 +298,7 @@ namespace UmbracoFlare.ApiControllers
                 return urls;
             }
 
-            urls.AddRange(UmbracoFlareDomainManager.Instance.GetUrlsForNode(contentToPurge.Id, includeChildren));
+            urls.AddRange(cloudflareManager.DomainManager.GetUrlsForNode(contentToPurge.Id, includeChildren));
             
             return urls;
         }
@@ -302,9 +313,8 @@ namespace UmbracoFlare.ApiControllers
                 return urls;
             }
 
-            UmbracoHelper uh = new UmbracoHelper(UmbracoContext.Current);
 
-            return UmbracoUrlWildCardManager.Instance.GetAllUrlsForWildCardUrls(urlsWithWildCards, uh);
+            return this.wildCardManager.GetAllUrlsForWildCardUrls(urlsWithWildCards);
         }
     }
 

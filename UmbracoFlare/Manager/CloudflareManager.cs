@@ -9,41 +9,37 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UmbracoFlare.Helpers;
+using UmbracoFlare.Services;
 
 namespace UmbracoFlare.Manager
 {
-    public class CloudflareManager
+    public class CloudflareManager : ICloudflareManager
     {
-        private static CloudflareManager _instance = null;
-
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private CloudflareConfiguration _config = CloudflareConfiguration.Instance;
-        private CloudflareApiController _api;
+        private ICloudflareConfiguration configuration;
+        private readonly IUmbracoFlareDomainManager domainManager;
+        private ICloudflareService cloudflareService;
         private IEnumerable<Zone> _zonesCache = null;
 
-        public static CloudflareManager Instance
-        {
-            get
-            {
-                if(_instance == null)
-                {
-                    _instance = new CloudflareManager();
-                }
+        public ICloudflareConfiguration Configuration => configuration;
+        public IUmbracoFlareDomainManager DomainManager => domainManager;
 
-                return _instance;
-            }
-        }
-
-        private CloudflareManager()
+        private CloudflareManager(
+                ICloudflareConfiguration configuration, 
+                IUmbracoFlareDomainManager domainManager,
+                ICloudflareService cloudflareProvider
+            )
         {
-            _api = new CloudflareApiController();
+            this.configuration = configuration;
+            this.domainManager = domainManager;
+            this.cloudflareService = cloudflareProvider;
         }
 
 
         public StatusWithMessage PurgeEverything(string domain)
         {
             //If the setting is turned off, then don't do anything.
-            if (!CloudflareConfiguration.Instance.PurgeCacheOn) return new StatusWithMessage() { Success = false, Message = "Clould flare for umbraco is turned of as indicated in the config file." };
+            if (!configuration.PurgeCacheOn) return new StatusWithMessage() { Success = false, Message = "Clould flare for umbraco is turned of as indicated in the config file." };
 
 
             //We only want the host and not the scheme or port number so just to ensure that is what we are getting we will
@@ -56,6 +52,7 @@ namespace UmbracoFlare.Manager
             }
             catch(Exception e)
             {
+                Log.Error(e);
                 //So if we are here it didn't parse as an uri so we will assume that it was given in the correct format (without http://)
             }
 
@@ -68,7 +65,7 @@ namespace UmbracoFlare.Manager
                 return new StatusWithMessage(false, String.Format("We could not purge the cache because the domain {0} is not valid with the provided api key and email combo. Please ensure this domain is registered under these credentials on your cloudflare dashboard.", domain));
             }
 
-            bool statusFromApi = this._api.PurgeCache(websiteZone.Id, null, true);
+            bool statusFromApi = this.cloudflareService.PurgeCache(websiteZone.Id, null, true);
 
             if(!statusFromApi)
             {
@@ -81,12 +78,12 @@ namespace UmbracoFlare.Manager
         }
         
 
-        public List<StatusWithMessage> PurgePages(IEnumerable<string> urls)
+        public IEnumerable<StatusWithMessage> PurgePages(IEnumerable<string> urls)
         {
             //If the setting is turned off, then don't do anything.
-            if (!CloudflareConfiguration.Instance.PurgeCacheOn) return new List<StatusWithMessage>(){new StatusWithMessage(false, CloudflareMessages.CLOULDFLARE_DISABLED)};
+            if (!configuration.PurgeCacheOn) return new List<StatusWithMessage>(){new StatusWithMessage(false, CloudflareMessages.CLOULDFLARE_DISABLED)};
 
-            urls = UmbracoFlareDomainManager.Instance.FilterToAllowedDomains(urls);
+            urls = domainManager.FilterToAllowedDomains(urls);
 
             //Separate all of these into individual groups where the domain is the same that way we save some cloudflare requests.
             IEnumerable<IGrouping<string, string>> groupings = urls.GroupBy(url => UrlHelper.GetDomainFromUrl(url,true));
@@ -111,7 +108,7 @@ namespace UmbracoFlare.Manager
                 }
 
                 //Make the request to the api using the urls from this domain group.
-                bool apiResult = this._api.PurgeCache(websiteZone.Id, domainUrlGroup);
+                bool apiResult = this.cloudflareService.PurgeCache(websiteZone.Id, domainUrlGroup);
 
                 if (!apiResult)
                 {
@@ -138,7 +135,7 @@ namespace UmbracoFlare.Manager
         /// <returns>The retreived zone</returns>
         public Zone GetZone(string url = null)
         {
-            IEnumerable<Zone> zones = UmbracoFlareDomainManager.Instance.AllowedZones.Where(x => url.Contains(x.Name));
+            IEnumerable<Zone> zones = domainManager.AllowedZones.Where(x => url.Contains(x.Name));
 
             //List<Zone> zones = this._api.ListZones(url);
 
@@ -154,7 +151,7 @@ namespace UmbracoFlare.Manager
 
         public bool IsSSLEnabledOnCloudflare(string zoneId)
         {
-            SslEnabledResponse sslResponse = this._api.GetSSLStatus(zoneId);
+            SslEnabledResponse sslResponse = this.cloudflareService.GetSSLStatus(zoneId);
 
             return sslResponse.Result.Value != "off";
         }
@@ -163,13 +160,13 @@ namespace UmbracoFlare.Manager
         {
             if(_zonesCache == null || !_zonesCache.Any())
             {
-                _zonesCache = this._api.ListZones();
+                _zonesCache = this.cloudflareService.ListZones();
             }
             return _zonesCache;
         }
 
         
-        public static string PrintResultsSummary(IEnumerable<StatusWithMessage> results)
+        public string PrintResultsSummary(IEnumerable<StatusWithMessage> results)
         {
             StringBuilder sb = new StringBuilder();
             
