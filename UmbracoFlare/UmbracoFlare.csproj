@@ -321,16 +321,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="transforms\applications.config.install.xdt" />
-    <None Include="transforms\applications.config.uninstall.xdt">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="transforms\dashboard.config.install.xdt">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="transforms\dashboard.config.uninstall.xdt">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\UmbracoFlare\Assets\CSS\styles.css" />
