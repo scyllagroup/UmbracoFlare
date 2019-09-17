@@ -14,16 +14,16 @@ namespace UmbracoFlare.Manager
     {
         private Dictionary<int, IEnumerable<string>> _contentIdToUrlCache;
         private const string CACHE_KEY = "UmbracoUrlWildCardManager.ContentIdToUrlCache";
-        private readonly UmbracoHelper helper;
+        private readonly UmbracoContext umbracoContext;
         private readonly IUmbracoFlareDomainManager domainManager;
 
         public RuntimeCacheUrlWildCardManager(
-                UmbracoHelper helper,
+                UmbracoContext umbracoContext,
                 IUmbracoFlareDomainManager domainManager
             )
         {
             _contentIdToUrlCache = HttpRuntime.Cache[CACHE_KEY] as Dictionary<int, IEnumerable<string>>;
-            this.helper = helper;
+            this.umbracoContext = umbracoContext;
             this.domainManager = domainManager;
         }
 
@@ -82,7 +82,7 @@ namespace UmbracoFlare.Manager
             //Id like to use UmbracoContext.Current.ContentCache.GetByRoute() somehow but you cant always guarantee that urls
             //will be in  hierarchical order because of rewriteing, etc.
 
-            IEnumerable<IPublishedContent> roots = helper.ContentAtRoot();
+            IEnumerable<IPublishedContent> roots = umbracoContext.Content.GetAtRoot();
             
             foreach(IPublishedContent content in roots)
             {

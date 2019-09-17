@@ -22,18 +22,18 @@ namespace UmbracoFlare.Components
         private readonly ICloudflareManager cloudflareManager;
         private readonly IUmbracoFlareDomainManager domainManager;
         private readonly IImageCropperManager imageCropperManager;
-        private readonly UmbracoHelper helper;
+        private readonly UmbracoContext umbracoContext;
 
         public MediaSavingComponent(
                 ICloudflareManager cloudflareManager, 
                 IImageCropperManager imageCropperManager,
-                UmbracoHelper helper
+                UmbracoContext umbracoContext
             )
         {
             this.cloudflareManager = cloudflareManager;
             this.domainManager = cloudflareManager.DomainManager;
             this.imageCropperManager = imageCropperManager;
-            this.helper = helper;
+            this.umbracoContext = umbracoContext;
         }
         public void Initialize()
         {
@@ -73,7 +73,7 @@ namespace UmbracoFlare.Components
                         //continue;
                     }
 
-                    var publishedMedia = helper.Media(media.Id);
+                    var publishedMedia = umbracoContext.Media.GetById(media.Id);
 
                     if (publishedMedia == null)
                     {

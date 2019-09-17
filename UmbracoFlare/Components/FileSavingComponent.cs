@@ -20,13 +20,10 @@ namespace UmbracoFlare.Components
     {
         private readonly ICloudflareManager cloudflareManager;
         private readonly IUmbracoFlareDomainManager domainManager;
-        private readonly UmbracoHelper helper;
-
-        public FileSavingComponent(ICloudflareManager cloudflareManager, UmbracoHelper helper)
+        public FileSavingComponent(ICloudflareManager cloudflareManager)
         {
             this.cloudflareManager = cloudflareManager;
             this.domainManager = cloudflareManager.DomainManager;
-            this.helper = helper;
         }
         public void Initialize()
         {

@@ -24,7 +24,7 @@ namespace UmbracoFlare.Manager
         private IEnumerable<Zone> _allowedZones;
         private IEnumerable<string> _allowedDomains;
 
-        private UmbracoFlareDomainManager(
+        public UmbracoFlareDomainManager(
                 ICloudflareService cloudflareService, 
                 IContentService contentService, 
                 IDomainService domainService, 

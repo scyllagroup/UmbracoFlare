@@ -88,9 +88,6 @@
     <Reference Include="LightInject.WebApi, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LightInject.WebApi.2.0.0\lib\net46\LightInject.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\UmbracoCms.Core.7.5.6\lib\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
       <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
     </Reference>
@@ -282,6 +279,7 @@
     <Compile Include="ImageCropperHelpers\IImageCropperManager.cs" />
     <Compile Include="Manager\IUmbracoFlareDomainManager.cs" />
     <Compile Include="Manager\IUrlWildCardManager.cs" />
+    <Compile Include="Services\CloudflareService.cs" />
     <Compile Include="Services\ICloudflareService.cs" />
     <Compile Include="Components\ContentPublishingComponent.cs" />
     <Compile Include="Compositions\StartupComposer.cs" />

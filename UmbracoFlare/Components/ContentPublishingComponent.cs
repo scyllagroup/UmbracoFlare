@@ -17,17 +17,14 @@ namespace UmbracoFlare.Components
 {
     public class ContentPublishingComponent : IComponent
     {
-        private readonly UmbracoHelper helper;
         private readonly ICloudflareManager cloudflareManager;
         private readonly IUmbracoFlareDomainManager domainManager;
         private readonly IUrlWildCardManager wildCardManager;
 
         public ContentPublishingComponent(
-            UmbracoHelper helper, 
             ICloudflareManager cloudflareManager, 
             IUrlWildCardManager wildCardManager)
         {
-            this.helper = helper;
             this.cloudflareManager = cloudflareManager;
             this.domainManager = cloudflareManager.DomainManager;
             this.wildCardManager = wildCardManager;
@@ -37,8 +34,6 @@ namespace UmbracoFlare.Components
             ContentService.Published += PurgeCloudflareCache;
             ContentService.Published += UpdateContentIdToUrlCache;
         }
-
-
         public void Terminate()
         {
             ContentService.Published -= PurgeCloudflareCache;

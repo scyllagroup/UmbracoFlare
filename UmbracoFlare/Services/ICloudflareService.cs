@@ -11,7 +11,7 @@ namespace UmbracoFlare.Services
     {
         UserDetails GetUserDetails();
         SslEnabledResponse GetSSLStatus(string zoneId);
-        List<Zone> ListZones(string name = null, bool throwExceptionOnFail = false);
+        IEnumerable<Zone> ListZones(string name = null, bool throwExceptionOnFail = false);
         bool PurgeCache(string zoneIdentifier, IEnumerable<string> urls, bool purgeEverything = false, bool throwExceptionOnError = false);
     }
 }

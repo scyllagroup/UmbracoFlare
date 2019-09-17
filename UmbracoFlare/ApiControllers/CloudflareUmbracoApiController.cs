@@ -1,5 +1,4 @@
-﻿using log4net;
-using UmbracoFlare.Configuration;
+﻿using UmbracoFlare.Configuration;
 using UmbracoFlare.Manager;
 using UmbracoFlare.Models;
 using System;
@@ -27,7 +26,6 @@ namespace UmbracoFlare.ApiControllers
     public class CloudflareUmbracoApiController : UmbracoAuthorizedApiController
     {
         //The Log
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly ICloudflareManager cloudflareManager;
         private readonly ICloudflareService cloudflareService;
         private readonly IUrlWildCardManager wildCardManager;
@@ -275,7 +273,7 @@ namespace UmbracoFlare.ApiControllers
             }
             catch (Exception e)
             {
-                Log.Error("Could not update cloudflare purge cache on state.", e);
+                Logger.Error(typeof(CloudflareUmbracoApiController),"Could not update cloudflare purge cache on state.", e);
                 return null;
             }
         }

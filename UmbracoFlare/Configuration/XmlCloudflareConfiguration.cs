@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Hosting;
 using System.Xml.Linq;
 
 namespace UmbracoFlare.Configuration
@@ -19,7 +20,7 @@ namespace UmbracoFlare.Configuration
         {
             try
             {
-                CONFIG_PATH = HttpContext.Current.Server.MapPath("~/Config/cloudflare.config");
+                CONFIG_PATH = HostingEnvironment.MapPath("~/Config/cloudflare.config");
                 this._doc = XDocument.Load(CONFIG_PATH);
             }
             catch(Exception e)

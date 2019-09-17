@@ -1,5 +1,4 @@
-﻿using log4net;
-using UmbracoFlare.ApiControllers;
+﻿using UmbracoFlare.ApiControllers;
 using UmbracoFlare.Configuration;
 using UmbracoFlare.Models;
 using System;
@@ -10,29 +9,32 @@ using System.Text;
 using System.Threading.Tasks;
 using UmbracoFlare.Helpers;
 using UmbracoFlare.Services;
+using Umbraco.Core.Logging;
 
 namespace UmbracoFlare.Manager
 {
     public class CloudflareManager : ICloudflareManager
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private ICloudflareConfiguration configuration;
         private readonly IUmbracoFlareDomainManager domainManager;
         private ICloudflareService cloudflareService;
+        private readonly IProfilingLogger logger;
         private IEnumerable<Zone> _zonesCache = null;
 
         public ICloudflareConfiguration Configuration => configuration;
         public IUmbracoFlareDomainManager DomainManager => domainManager;
 
-        private CloudflareManager(
+        public CloudflareManager(
                 ICloudflareConfiguration configuration, 
                 IUmbracoFlareDomainManager domainManager,
-                ICloudflareService cloudflareProvider
+                ICloudflareService cloudflareProvider,
+                IProfilingLogger logger
             )
         {
             this.configuration = configuration;
             this.domainManager = domainManager;
             this.cloudflareService = cloudflareProvider;
+            this.logger = logger;
         }
 
 
@@ -52,7 +54,7 @@ namespace UmbracoFlare.Manager
             }
             catch(Exception e)
             {
-                Log.Error(e);
+                logger.Error<CloudflareManager>(e);
                 //So if we are here it didn't parse as an uri so we will assume that it was given in the correct format (without http://)
             }
 
@@ -141,7 +143,7 @@ namespace UmbracoFlare.Manager
 
             if(zones == null || !zones.Any())
             {
-                Log.Error(String.Format("Could not retrieve the zone from cloudflare with the domain(url) of {0}", url));
+                logger.Error<CloudflareManager>(String.Format("Could not retrieve the zone from cloudflare with the domain(url) of {0}", url));
                 return null;
             }
 

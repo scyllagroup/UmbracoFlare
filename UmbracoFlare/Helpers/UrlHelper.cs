@@ -1,16 +1,14 @@
-﻿using log4net;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using Umbraco.Web.Composing;
 
 namespace UmbracoFlare.Helpers
 {
     public class UrlHelper
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
 
         /// <summary>
         /// Takes the given url and returns the domain with the scheme (no path and query)
@@ -164,9 +162,9 @@ namespace UmbracoFlare.Helpers
             {
                 if(useCurrentDomain)
                 {
-                    if (HttpContext.Current == null || HttpContext.Current.Request == null)
+                    if (HttpContext.Current != null || HttpContext.Current.Request == null)
                     {
-                        Log.Error(String.Format("HttpContext.Current or HttpContext.Current.Request is null."));
+                        Current.Logger.Error(typeof(UrlHelper),String.Format("HttpContext.Current or HttpContext.Current.Request is null."));
                     }
                     Uri root = new Uri(String.Format("{0}{1}{2}", HttpContext.Current.Request.Url.Scheme, Uri.SchemeDelimiter, HttpContext.Current.Request.Url.Host));
                     uriWithDomain = new Uri(root, url);
@@ -180,7 +178,7 @@ namespace UmbracoFlare.Helpers
             }
             catch
             {
-                Log.Error(String.Format("Could not create root uri using http context request url {0}", HttpContext.Current.Request.Url));
+                Current.Logger.Error(typeof(UrlHelper), String.Format("Could not create root uri using http context request url {0}", HttpContext.Current.Request.Url));
                 return String.Empty;
             }
 

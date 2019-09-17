@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Umbraco.Core;
 using Umbraco.Core.Composing;
-using UmbracoFlare.ApiControllers;
 using UmbracoFlare.Components;
 using UmbracoFlare.Configuration;
 using UmbracoFlare.ImageCropperHelpers;
@@ -24,16 +23,16 @@ namespace UmbracoFlare.Compositions
 
             //all the DI bits
             composition.Register<ICloudflareConfiguration, XmlCloudflareConfiguration>();
-            composition.Register<ICloudflareManager, CloudflareManager>();
             composition.Register<IUmbracoFlareDomainManager, UmbracoFlareDomainManager>();
+            composition.Register<ICloudflareManager, CloudflareManager>();
             composition.Register<IUrlWildCardManager, RuntimeCacheUrlWildCardManager>();
-            composition.Register<ICloudflareService, CloudflareApiController>();
+            composition.Register<ICloudflareService, CloudflareService>();
             composition.Register<IImageCropperCacheManager, ImageCropperCacheManager>();
-            composition.Register<IImageCropperManager, ImageCropperCacheManager>();
+            composition.Register<IImageCropperManager, ImageCropperManager>();
 
             //add our new components
-            composition.Components()
-                .Append<ContentPublishingComponent>()
+           composition.Components()
+                .Append<ContentPublishingComponent>() 
                 .Append<FileSavingComponent>()
                 .Append<MediaSavingComponent>()
                 .Append<DataTypeSavingComponent>()
