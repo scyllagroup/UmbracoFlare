@@ -277,6 +277,7 @@
     <Compile Include="Components\FileSavingComponent.cs" />
     <Compile Include="Components\MediaSavingComponent.cs" />
     <Compile Include="Components\TreeMenuComponent.cs" />
+    <Compile Include="Extensions\IEntityExtensions.cs" />
     <Compile Include="ImageCropperHelpers\IImageCropperCacheManager.cs" />
     <Compile Include="ImageCropperHelpers\IImageCropperManager.cs" />
     <Compile Include="Manager\IUmbracoFlareDomainManager.cs" />

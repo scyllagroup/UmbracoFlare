@@ -9,6 +9,7 @@ using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using Umbraco.Core.Services.Implement;
 using Umbraco.Web;
+using UmbracoFlare.Extensions;
 using UmbracoFlare.Helpers;
 using UmbracoFlare.ImageCropperHelpers;
 using UmbracoFlare.Manager;
@@ -56,7 +57,7 @@ namespace UmbracoFlare.Components
             //delete the cloudflare cache for the saved entities.
             foreach (IMedia media in e.SavedEntities)
             {
-                if (media.UpdateDate != media.CreateDate)
+                if (!media.IsNew())
                 {
                     try
                     {

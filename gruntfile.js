@@ -30,8 +30,6 @@ module.exports = function(grunt) {
 	tasks: ['copy:config']
       },
       transforms:{
-	files:['UmbracoFlare/transforms/*'],
-	tasks: ['copy:transforms']
       }
     },
 
@@ -49,10 +47,6 @@ module.exports = function(grunt) {
 	expand: true
       },
       transforms:{
-	cwd: 'UmbracoFlare/transforms/',
-        src: ['*.xdt'],
-	dest: '<%= dest %>/config/',
-	expand: true
       },
       dll: {
         cwd: 'UmbracoFlare/bin/Release/',

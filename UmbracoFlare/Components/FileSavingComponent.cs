@@ -9,6 +9,7 @@ using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using Umbraco.Core.Services.Implement;
 using Umbraco.Web;
+using UmbracoFlare.Extensions;
 using UmbracoFlare.Helpers;
 using UmbracoFlare.Manager;
 using UmbracoFlare.Models;
@@ -62,7 +63,7 @@ namespace UmbracoFlare.Components
 
             foreach (var file in files)
             {
-                if (file.CreateDate != file.UpdateDate)
+                if (!file.IsNew())
                 {
                     urls.Add(file.VirtualPath);
                 }
