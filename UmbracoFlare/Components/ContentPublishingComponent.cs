@@ -104,14 +104,17 @@ namespace UmbracoFlare.Components
                 //TODO: Does this need to be here?
                 //We also need to update the descendants now because their urls changed
                 int descendantsCount = sender.CountDescendants(c.Id);
-                long outParam = 0;
-                IEnumerable<IContent> descendants = sender.GetPagedDescendants(c.Id, 0, descendantsCount, out outParam);
-
-                foreach (IContent desc in descendants)
+                if(descendantsCount > 0)
                 {
-                    IEnumerable<string> descUrls = domainManager.GetUrlsForNode(desc.Id, false);
+                    long outParam = 0;
+                    IEnumerable<IContent> descendants = sender.GetPagedDescendants(c.Id, 0, descendantsCount, out outParam);
 
-                    wildCardManager.UpdateContentIdToUrlCache(c.Id, descUrls);
+                    foreach (IContent desc in descendants)
+                    {
+                        IEnumerable<string> descUrls = domainManager.GetUrlsForNode(desc.Id, false);
+
+                        wildCardManager.UpdateContentIdToUrlCache(c.Id, descUrls);
+                    }
                 }
             }
         }

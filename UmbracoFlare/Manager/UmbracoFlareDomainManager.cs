@@ -20,21 +20,21 @@ namespace UmbracoFlare.Manager
         private readonly ICloudflareService cloudflareService;
         private readonly IContentService contentService;
         private readonly IDomainService domainService;
-        private readonly UmbracoContext umbracoContext;
+        private readonly IUmbracoContextFactory umbracoContextFactory;
         private IEnumerable<Zone> _allowedZones;
         private IEnumerable<string> _allowedDomains;
 
         public UmbracoFlareDomainManager(
                 ICloudflareService cloudflareService, 
                 IContentService contentService, 
-                IDomainService domainService, 
-                UmbracoContext umbracoContext
+                IDomainService domainService,
+                IUmbracoContextFactory umbracoContextFactory
             )
         {
             this.cloudflareService = cloudflareService;
             this.contentService = contentService;
             this.domainService = domainService;
-            this.umbracoContext = umbracoContext;
+            this.umbracoContextFactory = umbracoContextFactory;
         }
 
         public IEnumerable<Zone> AllowedZones {
@@ -121,11 +121,14 @@ namespace UmbracoFlare.Manager
             if (includeDescendants)
             {
                 var numDescendants = contentService.CountDescendants(content.Id);
-                long outParam;
-                foreach (IContent desc in contentService.GetPagedDescendants(content.Id, 0, numDescendants, out outParam))
+                if(numDescendants > 0)
                 {
-                    urls.Add(GetUrl(desc));
-                    urls.AddRange(GetotherUrls(desc));
+                    long outParam;
+                    foreach (IContent desc in contentService.GetPagedDescendants(content.Id, 0, numDescendants, out outParam))
+                    {
+                        urls.Add(GetUrl(desc));
+                        urls.AddRange(GetotherUrls(desc));
+                    }
                 }
             }
 
@@ -134,12 +137,18 @@ namespace UmbracoFlare.Manager
 
         private string GetUrl(IContent content)
         {
-            return umbracoContext.UrlProvider.GetUrl(content.Id);
+            using (var contextReference = umbracoContextFactory.EnsureUmbracoContext())
+            {
+                return contextReference.UmbracoContext.UrlProvider.GetUrl(content.Id);
+            }
         }
 
         private IEnumerable<string> GetotherUrls(IContent content)
         {
-            return umbracoContext.UrlProvider.GetOtherUrls(content.Id).Where(x => x.IsUrl).Select(x => x.Text);
+            using (var contextReference = umbracoContextFactory.EnsureUmbracoContext())
+            {
+                return contextReference.UmbracoContext.UrlProvider.GetOtherUrls(content.Id).Where(x => x.IsUrl).Select(x => x.Text);
+            }
         }
 
 

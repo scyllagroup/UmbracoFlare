@@ -1,30 +1,26 @@
 ﻿{
-    propertyEditors: [
-        
-    ],
-
-    javascript: [
-        '~/App_Plugins/UmbracoFlare/backoffice/js/resources/cloudflare.resource.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/resources/modal.service.js',
-        '~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.configuration.controller.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.dashboard.controller.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.license.controller.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.support.controller.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.menu.controller.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.domainDialog.controller.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/controllers/infomodal.controller.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/controllers/confirmmodal.controller.js',
-        '~/App_Plugins/UmbracoFlare/backoffice/js/directives/cloudflare.directives.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/directives/viewmore.directive.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/directives/blur.directive.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/directives/filesystempicker.directive.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/controllers/filesystem-picker.controller.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/directives/filesystem-picker.directives.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/directives/switchTabOnClick.directive.js',
-		'~/App_Plugins/UmbracoFlare/backoffice/js/directives/bnModals.directive.js'
-    ],
-	css:[
-	'~/App_Plugins/UmbracoFlare/Assets/CSS/styles.css',
-	'~/App_Plugins/UmbracoFlare/Assets/Icons/Icons.css'
-	]
+  "javascript": [
+    "~/App_Plugins/UmbracoFlare/backoffice/js/resources/cloudflare.resource.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/resources/modal.service.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.configuration.controller.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.dashboard.controller.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.license.controller.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.support.controller.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.menu.controller.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/controllers/cloudflare.domainDialog.controller.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/controllers/infomodal.controller.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/controllers/confirmmodal.controller.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/directives/cloudflare.directives.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/directives/viewmore.directive.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/directives/blur.directive.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/directives/filesystempicker.directive.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/controllers/filesystem-picker.controller.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/directives/filesystem-picker.directives.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/directives/switchTabOnClick.directive.js",
+    "~/App_Plugins/UmbracoFlare/backoffice/js/directives/bnModals.directive.js"
+  ],
+  "css": [
+    "~/App_Plugins/UmbracoFlare/Assets/CSS/styles.css",
+    "~/App_Plugins/UmbracoFlare/Assets/Icons/Icons.css"
+  ]
 }

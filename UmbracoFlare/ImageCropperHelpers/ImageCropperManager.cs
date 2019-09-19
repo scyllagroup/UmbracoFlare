@@ -53,12 +53,17 @@ namespace UmbracoFlare.ImageCropperHelpers
 
             foreach (IDataType dataType in imageCropperDataTypes)
             {
-                ValueListConfiguration valueList = (ValueListConfiguration)dataType.Configuration;
-                var cropsStr = valueList.Items ?? Enumerable.Empty<ValueListConfiguration.ValueListItem>();
+                ImageCropperConfiguration valueList = (ImageCropperConfiguration)dataType.Configuration;
+                var crops = valueList.Crops ?? Enumerable.Empty<ImageCropperConfiguration.Crop>();
 
-                if (cropsStr.Any())
+                if (crops.Any())
                 {
-                    IEnumerable<Crop> cropsFromDb = JsonConvert.DeserializeObject<IEnumerable<Crop>>(cropsStr.FirstOrDefault()?.Value);
+                    IEnumerable<Crop> cropsFromDb = crops.Select(x => new Crop()
+                    {
+                        alias = x.Alias,
+                        width = x.Width,
+                        height = x.Height
+                    });
 
                     allCrops.AddRange(cropsFromDb);
                 }

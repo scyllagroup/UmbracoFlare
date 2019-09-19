@@ -22,18 +22,18 @@ namespace UmbracoFlare.Components
         private readonly ICloudflareManager cloudflareManager;
         private readonly IUmbracoFlareDomainManager domainManager;
         private readonly IImageCropperManager imageCropperManager;
-        private readonly UmbracoContext umbracoContext;
+        private readonly IUmbracoContextFactory umbracoContextFactory;
 
         public MediaSavingComponent(
                 ICloudflareManager cloudflareManager, 
                 IImageCropperManager imageCropperManager,
-                UmbracoContext umbracoContext
+                IUmbracoContextFactory umbracoContextFactory
             )
         {
             this.cloudflareManager = cloudflareManager;
             this.domainManager = cloudflareManager.DomainManager;
             this.imageCropperManager = imageCropperManager;
-            this.umbracoContext = umbracoContext;
+            this.umbracoContextFactory = umbracoContextFactory;
         }
         public void Initialize()
         {
@@ -73,20 +73,22 @@ namespace UmbracoFlare.Components
                         //continue;
                     }
 
-                    var publishedMedia = umbracoContext.Media.GetById(media.Id);
-
-                    if (publishedMedia == null)
+                    using (var contextReference = umbracoContextFactory.EnsureUmbracoContext())
                     {
-                        e.Messages.Add(new EventMessage("Cloudflare Caching", "We could not find the IPublishedContent version of the media: " + media.Id + " you are trying to save.", EventMessageType.Error));
-                        continue;
-                    }
-                    foreach (var crop in imageCropSizes)
-                    {
-                        urls.Add(publishedMedia.GetCropUrl(crop.alias));
+                        var publishedMedia = contextReference.UmbracoContext.Media.GetById(media.Id);
+                        if (publishedMedia == null)
+                        {
+                            e.Messages.Add(new EventMessage("Cloudflare Caching", "We could not find the IPublishedContent version of the media: " + media.Id + " you are trying to save.", EventMessageType.Error));
+                            continue;
+                        }
+                        foreach (var crop in imageCropSizes)
+                        {
+                            urls.Add(publishedMedia.GetCropUrl(crop.alias));
 
+                        }
+                        urls.Add(publishedMedia.Url);
                     }
-                    urls.Add(publishedMedia.Url);
-                    }
+                }
             }
 
             IEnumerable<StatusWithMessage> results = cloudflareManager.PurgePages(UrlHelper.MakeFullUrlWithDomain(urls, domains, true));
