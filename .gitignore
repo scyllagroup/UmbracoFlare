@@ -198,3 +198,4 @@ FakesAssemblies/
 # Ignore App_Data folders
 */App_Data/Temp/*
 */App_Data/Logs/*
+/UmbracoFlareWebsite/config/cloudflare.config
