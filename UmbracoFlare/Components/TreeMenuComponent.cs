@@ -35,7 +35,7 @@ namespace UmbracoFlare.Components
             MenuItem menuItem = new MenuItem("purgeCache", "Purge Cloudflare Cache");
 
             menuItem.Icon = "umbracoflare-tiny";
-
+            menuItem.OpensDialog = true;
             menuItem.LaunchDialogView("/App_Plugins/UmbracoFlare/backoffice/treeViews/PurgeCacheDialog.html", "Purge Cloudflare Cache");
 
             e.Menu.Items.Insert(e.Menu.Items.Count - 1, menuItem);

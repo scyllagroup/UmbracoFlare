@@ -1,10 +1,13 @@
 ﻿angular.module("umbraco").controller("Cloudflare.Menu.Controller",
-    function ($scope, eventsService, cloudflareResource, navigationService, appState, treeService, localizationService) {
+    [
+        '$scope', 'eventsService', 'cloudflareResource', 'navigationService', 'appState', 'treeService', 'localizationService',
+        function ($scope, eventsService, cloudflareResource, navigationService, appState, treeService, localizationService) {
 
 
         $scope.busy = false;
         $scope.success = false;
         $scope.error = false;
+        var dialogOptions = $scope.dialogOptions;
 
         var nodeId = $scope.$id;
 
@@ -28,5 +31,10 @@
                     $scope.error = true;
                     $scope.errorMessage = "We are sorry, we could not clear the cache at this time.";
                 });
-        };
-    });
+            };
+
+            $scope.closeDialog = function () {
+                navigationService.hideDialog();
+            };
+        }
+    ]);
