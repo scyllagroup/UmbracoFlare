@@ -315,73 +315,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="App_Plugins\UmbracoFlare\package.manifest" />
     <None Include="Config\cloudflare.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_Plugins\UmbracoFlare\Assets\CSS\styles.css" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Icons\Icons.css" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Icons\umbracoflare-black-18x20px.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Icons\umbracoflare-light_25x25.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\API.jpg" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\by.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\cc-logo-large.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\Disable-purge.jpg" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\GitHub-Mark-120px-plus.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\GitHub-Mark-32px.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\GitHub-Mark-64px.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\GitHub-Mark-Light-120px-plus.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\GitHub-Mark-Light-32px.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\GitHub-Mark-Light-64px.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\login.jpg" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\manual-purge-1.jpg" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\manual-purge-2.jpg" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\nc.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\remix.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\sa.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\Scylla-Mark-64px.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Media\share.png" />
-    <Content Include="App_Plugins\UmbracoFlare\Assets\Icons\umbracoflare-logo-light.png" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\Cloudflare-About-Tab.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\Cloudflare-Configuration-Tab.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\Cloudflare-Dashboard-Tab.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\Cloudflare-License-Tab.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\Cloudflare-Support-Tab.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\dashboardViews\domainDialog.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\directiveViews\filesystem-picker-dialog.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\directiveViews\filesystem-picker.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\directiveViews\inputAdder.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\directiveViews\switchTabOnClickView.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\cloudflare.domainDialog.controller.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\confirmmodal.controller.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\infomodal.controller.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\directives\bnModals.directive.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\directives\switchTabOnClick.directive.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\directiveViews\viewmore.html" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\cloudflare.configuration.controller.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\cloudflare.dashboard.controller.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\cloudflare.license.controller.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\cloudflare.menu.controller.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\cloudflare.support.controller.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\controllers\filesystem-picker.controller.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\directives\blur.directive.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\directives\cloudflare.directives.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\directives\filesystem-picker.directives.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\directives\filesystempicker.directive.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\directives\viewmore.directive.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\resources\cloudflare.resource.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\js\resources\modal.service.js" />
-    <Content Include="App_Plugins\UmbracoFlare\backoffice\treeViews\PurgeCacheDialog.html" />
-    <Content Include="App_Plugins\UmbracoFlare\lang\en-US.xml" />
-    <Content Include="App_Plugins\UmbracoFlare\lang\en.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Plugins\UmbracoFlare\Assets\SCSS\" />
-    <Folder Include="App_Plugins\UmbracoFlare\backoffice\js\filters\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets" Condition="Exists('..\packages\Umbraco.SqlServerCE.4.0.0.1\build\Umbraco.SqlServerCE.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
