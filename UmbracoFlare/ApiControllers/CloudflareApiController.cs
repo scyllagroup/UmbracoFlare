@@ -24,10 +24,7 @@ namespace UmbracoFlare.ApiControllers
     ///umbraco/backoffice/UmbracoFlare/CloudflareApi/
     public class CloudflareApiController : UmbracoAuthorizedApiController
     {
-        //The API Endpoint.
-        public const string CLOUDFLARE_API_BASE_URL = "https://api.cloudflare.com/client/v4/";
-
-        //The Log
+        //The cloudflare service
         private readonly ICloudflareService cloudflareService;
 
         public CloudflareApiController(ICloudflareService cloudflareService)
