@@ -492,9 +492,6 @@
     <Content Include="config\HealthChecks.config" />
     <Content Include="config\ClientDependency.config" />
     <Content Include="config\BackOfficeTours\getting-started.json" />
-    <Content Include="config\cloudflare.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="App_Plugins\UmbracoFlare\package.manifest" />
     <None Include="packages.config" />
     <Content Include="Views\Web.config" />
